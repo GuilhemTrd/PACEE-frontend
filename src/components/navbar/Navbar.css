@@ -1,0 +1,287 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.navbar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 15%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 97vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 100%;
+    height: auto;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: inherit;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.profile-container:hover {
+    background-color: rgba(232, 237, 255, 0.5);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 30px); /* Empêche le dépassement de l'email */
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.profile-info p {
+    margin: 0;
+    font-size: 14px;
+    color: gray;
+    white-space: nowrap; /* Garde le texte sur une seule ligne */
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute "..." si le texte dépasse */
+}
+
+.menu {
+    flex-grow: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    border: 2px solid white;
+}
+
+.menu-item img.menu-icon {
+    margin-right: 10px;
+}
+
+.menu-item.selected {
+    background-color: rgba(232, 237, 255, 0.5);
+    border: 2px solid #FF7B00;
+    border-radius: 15px;
+    color: #FF7B00;
+    padding-left: 12px;
+}
+
+.menu-item:hover {
+    background-color: rgba(232, 237, 255, 0.5);
+}
+
+.socials{
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 0;
+    font-size: 14px;
+    color: gray;
+}
+
+.social-link,
+.logout-link {
+    display: block;
+    padding: 5px 0;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.social-link:hover,
+.logout-link:hover {
+    color: #FF7B00;
+}
+
+.logout {
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+/* Le burger-menu est sticky */
+.burger-menu {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.burger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+.burger-menu.open div:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.burger-menu.open div:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.open div:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Désactiver le scroll */
+.no-scroll {
+    overflow: hidden;
+}
+
+/* Responsive styling for various screen sizes */
+@media (max-width: 1500px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-pic {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .profile-info h2,
+    .profile-info p {
+        text-align: left;
+    }
+
+    .menu-item,
+    .social-link,
+    .category-link {
+        font-size: 15px;
+        padding: 8px 10px;
+    }
+
+    .profile-info h2 {
+        font-size: 14px;
+    }
+
+    .profile-info p {
+        font-size: 12px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .navbar-container {
+        width: 13%;
+    }
+
+    .menu-item,
+    .social-link,
+    .category-link {
+        font-size: 14px;
+        padding: 7px 10px;
+    }
+
+    .profile-info h2 {
+        font-size: 13px;
+    }
+
+    .profile-info p {
+        font-size: 10px;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (max-width: 972px) {
+    .navbar-container {
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        padding: 10px;
+        position: fixed;
+        left: -100%;
+        transition: left 0.3s ease;
+        background-color: #fff;
+    }
+
+    .navbar-container .logo {
+        display: none;
+    }
+
+    .navbar-container.open {
+        left: 0;
+    }
+
+    .burger-menu {
+        display: block;
+    }
+
+    .navbar-container .profile-container {
+        margin-top: 20px;
+    }
+
+    .menu-item {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .social-link,
+    .category-link {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-info h2 {
+        font-size: 12px;
+    }
+
+    .profile-info p {
+        font-size: 10px;
+        text-overflow: ellipsis;
+    }
+
+    .menu-item {
+        font-size: 11px;
+        padding: 5px 8px;
+    }
+
+    .social-link,
+    .category-link {
+        font-size: 11px;
+    }
+}

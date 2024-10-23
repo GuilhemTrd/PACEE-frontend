@@ -68,7 +68,7 @@ const Login = () => {
                 const data = await response.json();
                 setSuccessMessage('Connexion réussie !');
                 localStorage.setItem('token', data.token);
-                navigate('/ProchainePage');
+                navigate('/navbar');
             } else if (response.status === 401) {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
                 passwordInputRef.current.focus();
