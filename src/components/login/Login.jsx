@@ -3,12 +3,14 @@ import './Login.css';
 import logo from '../../assets/logo/logo-typographique.png';
 import background from '../../assets/images/LoginRegister_img.png';
 import mailIcon from '../../assets/icons/mail.svg';
-import lockIcon from '../../assets/icons/lock.svg';
+import eyeOpenIcon from '../../assets/icons/eye-open.svg';
+import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false); // Pour gérer la visibilité du mot de passe
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +26,11 @@ const Login = () => {
     // Validation du champ password
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
+    };
+
+    // Fonction pour basculer la visibilité du mot de passe
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
     };
 
     // Soumission du formulaire
@@ -60,9 +67,7 @@ const Login = () => {
             if (response.ok) {
                 const data = await response.json();
                 setSuccessMessage('Connexion réussie !');
-                // Stocker le token JWT dans le localStorage
                 localStorage.setItem('token', data.token);
-                // Rediriger l'utilisateur vers la page suivante
                 navigate('/ProchainePage');
             } else if (response.status === 401) {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
@@ -102,10 +107,9 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                         <div className="input-icon">
-                            <img src={lockIcon} alt="Lock Icon"/>
                             <input
                                 ref={passwordInputRef}
-                                type="password"
+                                type={passwordVisible ? 'text' : 'password'}
                                 name="password"
                                 value={password}
                                 onChange={handlePasswordChange}
@@ -113,14 +117,25 @@ const Login = () => {
                                 aria-label="Mot de passe"
                                 required
                             />
+                            <img
+                                src={passwordVisible ? eyeOpenIcon : eyeClosedIcon}
+                                alt="Toggle visibility"
+                                className="toggle-visibility-password"
+                                onClick={togglePasswordVisibility}
+                            />
                         </div>
                     </div>
                     <button type="submit" className="login-button" disabled={isLoading}>
                         {isLoading ? 'Connexion en cours...' : 'Se connecter'}
                     </button>
-                    {errorMessage && <p className="error-message">{errorMessage}</p>}
-                    {successMessage && <p className="success-message">{successMessage}</p>}
                 </form>
+                <div className="register-link">
+                    <button className="register-button-loginPage" onClick={() => navigate('/Register')}>
+                        Je n'ai pas de compte
+                    </button>
+                </div>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {successMessage && <p className="success-message">{successMessage}</p>}
             </div>
         </div>
     );

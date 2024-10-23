@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.login-container {
+.register-container {
     display: flex;
     height: 100vh;
     width: 100vw;
@@ -124,8 +124,8 @@ form {
     animation: shake 1s;
 }
 
-.login-button {
-    margin-top: 10px;
+.register-button {
+    margin-top: 25px;
     width: 100%;
     padding: 15px;
     font-size: 16px;
@@ -138,11 +138,11 @@ form {
     box-sizing: border-box;
 }
 
-.login-button:hover {
+.register-button:hover {
     background: #333333;
 }
 
-.register-button-loginPage {
+.login-button-RegisterPage {
     margin-top: 10px;
     padding: 10px;
     font-size: 12px;
@@ -154,46 +154,15 @@ form {
     border: 2px solid black;
 }
 
-.register-button-loginPage:hover {
+.login-button-RegisterPage:hover {
     background: #eceaea;
     color: black;
     border: 2px solid black;
     border-radius: 10px;
 }
 
-/* Toggle visibility icon for password */
-.toggle-visibility-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.error-message {
-    color: red;
-    background-color: #fddcdc;
-    padding: 15px 10px;
-    border: red 3px solid;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 12px;
-}
-
-.success-message {
-    color: #5ec146;
-    background-color: #e4fddc;
-    padding: 15px 10px;
-    border: #5ec146 3px solid;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 14px;
-}
-
 @media (max-width: 1100px) {
-    .login-container {
+    .register-container {
         flex-direction: column;
         justify-content: center;
     }
@@ -205,6 +174,17 @@ form {
     .background-image {
         height: 100%;
     }
+}
+
+/* Styles pour la visibilité des mots de passe */
+.toggle-visibility-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 @media (max-width: 480px) {
@@ -225,7 +205,7 @@ form {
         font-size: 20px;
     }
 
-    .login-button, .google-login-button {
+    .register-button {
         font-size: 14px;
         padding: 10px;
     }
