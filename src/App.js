@@ -8,12 +8,9 @@ const App = () => {
     return (
         <Router>
             <Routes>
-                {/* Redirection de la route "/" vers "/login" */}
                 <Route path="/" element={<Navigate to="/login" />} />
 
-                {/* Route pour la page de login */}
                 <Route path="/login" element={<Login />} />
-
                 <Route path="/register" element={<Register />} />
             </Routes>
         </Router>
