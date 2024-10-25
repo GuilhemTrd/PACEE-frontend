@@ -5,12 +5,13 @@ import background from '../../assets/images/LoginRegister_img.png';
 import mailIcon from '../../assets/icons/mail.svg';
 import eyeOpenIcon from '../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
+import apiClient from '../../utils/apiClient';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [passwordVisible, setPasswordVisible] = useState(false); // Pour gérer la visibilité du mot de passe
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -53,30 +54,27 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
+            const response = await apiClient.post('/login', {
+                email,
+                password,
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                setSuccessMessage('Connexion réussie !');
+            if (response.status === 200) {
+                const data = response.data;
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('refresh_token', data.refresh_token);
+                localStorage.setItem('userId', data.user.id);
+                console.log('refreshToken : ' + data.refresh_token + ' localStorage : ' + localStorage.getItem('refresh_token'));
+                console.log('token : ' + data.token + ' localStorage : ' + localStorage.getItem('token'));
+                console.log(data);
+                setSuccessMessage('Connexion réussie !');
                 navigate('/navbar');
-            } else if (response.status === 401) {
+            } else {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
                 passwordInputRef.current.focus();
-            } else {
-                setErrorMessage('Une erreur est survenue, veuillez réessayer.');
             }
         } catch (error) {
-            setErrorMessage('Erreur de réseau ou serveur indisponible. Nous travaillons à résoudre le problème.');
+            setErrorMessage('Une erreur est survenue, veuillez réessayer.');
         } finally {
             setIsLoading(false);
         }
