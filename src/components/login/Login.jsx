@@ -68,7 +68,7 @@ const Login = () => {
                 console.log('token : ' + data.token + ' localStorage : ' + localStorage.getItem('token'));
                 console.log(data);
                 setSuccessMessage('Connexion réussie !');
-                navigate('/navbar');
+                navigate('/discussion');
             } else {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
                 passwordInputRef.current.focus();
