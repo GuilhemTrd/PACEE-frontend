@@ -1,7 +1,6 @@
 import React from 'react';
 import './Loader.css';
 import { LineWobble } from '@uiball/loaders';
-
 const Loader = ({ isCommentLoader }) => {
     return (
         <div className={isCommentLoader ? "comment-loader-container" : "loader-container"}>

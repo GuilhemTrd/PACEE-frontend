@@ -262,7 +262,7 @@ const Discussion = () => {
                                 {showComments[discussion.id] && (
                                     <div className="comments-section">
                                         {isLoadingComments[discussion.id] ? (
-                                            <Loader isCommentLoader={true} /> 
+                                            <Loader isCommentLoader={true} />
                                         ) : (
                                             comments[discussion.id]?.slice(0, visibleComments[discussion.id]).map(comment => (
                                                 <div className="comment" key={comment.id}>
