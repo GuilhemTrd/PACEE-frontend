@@ -20,6 +20,7 @@ const Discussion = () => {
     const [lastdiscussionTime, setLastdiscussionTime] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     //const [newCommentContent, setNewCommentContent] = useState({});
+    const [isLoadingComments, setIsLoadingComments] = useState({});
     const [flyLikeId, setFlyLikeId] = useState(null);
     const [isLiking, setIsLiking] = useState({});
 
@@ -106,12 +107,12 @@ const Discussion = () => {
     };
 
     const fetchComments = async (discussionId, commentUrls) => {
+        setIsLoadingComments((prev) => ({ ...prev, [discussionId]: true })); // Active le loader
         try {
             const commentsData = await Promise.all(
                 commentUrls.map(async (url) => {
                     const commentResponse = await apiClient.get(url);
                     const comment = commentResponse.data;
-                    // Récupérer les informations utilisateur pour chaque commentaire
                     const userResponse = await apiClient.get(comment.user);
                     const user = userResponse.data;
                     return { ...comment, user };
@@ -123,6 +124,8 @@ const Discussion = () => {
             }));
         } catch (error) {
             console.error('Erreur lors de la récupération des commentaires:', error);
+        } finally {
+            setIsLoadingComments((prev) => ({ ...prev, [discussionId]: false })); // Désactive le loader
         }
     };
 
@@ -258,12 +261,16 @@ const Discussion = () => {
                                 </div>
                                 {showComments[discussion.id] && (
                                     <div className="comments-section">
-                                        {comments[discussion.id]?.slice(0, visibleComments[discussion.id]).map(comment => (
-                                            <div className="comment" key={comment.id}>
-                                                <span className="comment-author">{comment.user?.full_name}</span>
-                                                <span className="comment-message">{comment.content}</span>
-                                            </div>
-                                        ))}
+                                        {isLoadingComments[discussion.id] ? (
+                                            <Loader isCommentLoader={true} /> 
+                                        ) : (
+                                            comments[discussion.id]?.slice(0, visibleComments[discussion.id]).map(comment => (
+                                                <div className="comment" key={comment.id}>
+                                                    <span className="comment-author">{comment.user?.full_name}</span>
+                                                    <span className="comment-message">{comment.content}</span>
+                                                </div>
+                                            ))
+                                        )}
                                         {visibleComments[discussion.id] < (comments[discussion.id]?.length || 0) && (
                                             <div className="load-more" onClick={() => loadMoreComments(discussion.id)}>
                                                 Charger plus
@@ -292,7 +299,7 @@ const Discussion = () => {
                     </div>
                 </div>
             )}
-            <ToastContainer />
+            <ToastContainer/>
         </div>
     );
 };

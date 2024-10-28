@@ -1,11 +1,10 @@
 import React from 'react';
 import './Loader.css';
-import { LineWobble } from '@uiball/loaders'
+import { LineWobble } from '@uiball/loaders';
 
-const Loader = () => {
+const Loader = ({ isCommentLoader }) => {
     return (
-        <div className="loader-container">
-            <div className="loader-overlay"></div>
+        <div className={isCommentLoader ? "comment-loader-container" : "loader-container"}>
             <div className="loader-content">
                 <LineWobble size={70} lineWeight={5.5} speed={1.9} color="#FF7B00" />
             </div>
