@@ -1,0 +1,283 @@
+.actualite-container {
+    display: flex;
+}
+
+.content-container {
+    flex: 1;
+    padding: 20px;
+    margin-left: 18%;
+}
+
+.discussions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.discussion {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.orange-background {
+    background-color: rgba(255, 123, 0, 0.1);
+}
+
+.discussion-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.discussion-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.discussion-info h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.discussion-info span {
+    color: gray;
+    font-size: 14px;
+}
+
+.discussion-message {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.toggle-message {
+    color: #FF7B00;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.discussion-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.discussion-like {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.discussion-like.liked {
+    animation: like-animation 0.5s ease;
+}
+
+.discussion-like:hover {
+    transform: scale(1.1);
+    color: #FF7B00;
+}
+
+@keyframes like-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1.2); }
+}
+
+.discussion-comments {
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.discussion-comments:hover {
+    color: #FF7B00;
+    transform: scale(1.05);
+}
+
+.discussion-comments:active {
+    transform: scale(0.95);
+}
+
+.comments-section {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 10px;
+    border-left: 3px solid #FF7B00;
+}
+
+.comment:last-child {
+    margin-bottom: 0;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-message {
+    font-size: 14px;
+    margin: 0;
+}
+
+.load-more {
+    cursor: pointer;
+    color: #FF7B00;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.load-more:hover {
+    color: #d95a00;
+    transform: scale(1.05);
+}
+
+.load-more:active {
+    transform: scale(0.95);
+}
+
+.add-discussion-button {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    color: #FF7B00;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.add-discussion-button:hover {
+    background-color: #FF7B00;
+    color: #FFF;
+    transform: scale(1.1);
+}
+
+.add-discussion-button:active {
+    transform: scale(0.95);
+}
+
+/* Popup styles */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.popup-inner {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 300px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); }
+    to { transform: translateY(0); }
+}
+
+.popup-inner textarea {
+    width: 92%;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    resize: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.popup-inner button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF7B00;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.popup-inner button:hover {
+    background-color: #e06b00;
+}
+
+.popup-inner button:last-child {
+    background-color: #ddd;
+    color: #333;
+}
+
+.popup-inner button:last-child:hover {
+    background-color: #ccc;
+}
+.like-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.fly-like {
+    position: absolute;
+    top: -10px;
+    left: 25px;
+    color: #FF7B00;
+    font-weight: bold;
+    animation: flyUp 0.8s ease forwards;
+}
+
+@keyframes flyUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@media (max-width: 972px) {
+    .content-container {
+        margin-left: 3%;
+    }
+
+}
