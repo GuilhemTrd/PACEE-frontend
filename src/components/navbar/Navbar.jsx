@@ -104,7 +104,7 @@ const Navbar = () => {
                     <a href="https://twitter.com" className="social-link">Twitter</a>
                 </div>
                 <div className="logout">
-                    <a href={"#"} className="logout-link" onClick={handleLogout}>Logout</a>
+                    <a href={"/login"} className="logout-link" onClick={handleLogout}>Logout</a>
                 </div>
             </div>
         </>
