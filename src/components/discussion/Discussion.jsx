@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import './Discussion.css';
 import Navbar from '../navbar/Navbar';
 import userProfile from '../../assets/temp/userProfile.png';
@@ -20,7 +20,7 @@ const Discussion = () => {
     const [isLoadingComments, setIsLoadingComments] = useState({});
     const [flyLikeId, setFlyLikeId] = useState(null);
     const [isLiking, setIsLiking] = useState({});
-
+    const newDiscussionRef = useRef(null);
     const userId = localStorage.getItem('userId');
 
     const fetchDiscussions = useCallback(async () => {
@@ -61,7 +61,14 @@ const Discussion = () => {
             [id]: !prevExpandeddiscussions[id]
         }));
     };
-
+    const openNewDiscussion = () => {
+        setIsPopupOpen(true);
+        setTimeout(() => {
+            if (newDiscussionRef.current) {
+                newDiscussionRef.current.focus();
+            }
+        }, 0);
+    };
     const toggleLike = async (id, userLiked) => {
         if (isLiking[id]) return;
         setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: true }));
@@ -102,7 +109,6 @@ const Discussion = () => {
             setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: false }));
         }
     };
-
     const fetchComments = async (discussionId, commentUrls) => {
         setIsLoadingComments((prev) => ({ ...prev, [discussionId]: true }));
         try {
@@ -128,8 +134,6 @@ const Discussion = () => {
             setIsLoadingComments((prev) => ({ ...prev, [discussionId]: false }));
         }
     };
-
-
     const toggleShowComments = (discussionId, commentUrls) => {
         setShowComments((prevShowComments) => {
             if (prevShowComments[discussionId]) {
@@ -143,36 +147,28 @@ const Discussion = () => {
             }
         });
     };
-
     const loadMoreComments = (id) => {
         setVisibleComments((prevVisibleComments) => ({
             ...prevVisibleComments,
             [id]: prevVisibleComments[id] + 5
         }));
     };
-
-    const handleAdddiscussion = async () => {
-        try {
-            const response = await apiClient.discussion('/api/discussions', {
-                content: newdiscussionMessage,
-                user: `/api/users/${userId}`,
-            });
-            const newDiscussion = response.data;
-
-            setDiscussions([newDiscussion, ...discussions]);
-            setNewdiscussionMessage('');
-            setIsPopupOpen(false);
-        } catch (error) {
-            console.error('Erreur lors de l\'ajout de la discussion:', error);
-        }
-    };
-
     const handleAddComment = async (discussionId) => {
         const nowAddComment = new Date();
-        //Prendre en compte le décalage horaire potentiel
         nowAddComment.setMinutes(nowAddComment.getMinutes() - nowAddComment.getTimezoneOffset());
         const commentContent = newCommentContent[discussionId];
+
         if (!commentContent || commentContent.trim() === '') {
+            const inputElement = document.getElementById(`comment-input-${discussionId}`);
+            const counterElement = document.getElementById(`character-counter-${discussionId}`);
+
+            inputElement.classList.add('shake');
+            counterElement.classList.add('shake');
+
+            setTimeout(() => {
+                inputElement.classList.remove('shake');
+                counterElement.classList.remove('shake');
+            }, 300);
 
             return;
         }
@@ -200,6 +196,13 @@ const Discussion = () => {
                 ...prevComments,
                 [discussionId]: [commentWithUser, ...(prevComments[discussionId] || [])]
             }));
+            setDiscussions((prevDiscussions) =>
+                prevDiscussions.map((discussion) =>
+                    discussion.id === discussionId
+                        ? { ...discussion, commentCount: discussion.commentCount + 1 }
+                        : discussion
+                )
+            );
 
             setNewCommentContent({ ...newCommentContent, [discussionId]: '' });
 
@@ -207,14 +210,32 @@ const Discussion = () => {
             console.error("Erreur lors de l'ajout du commentaire :", error);
         }
     };
+    const handleAdddiscussion = async () => {
+        console.log('Ajout de la discussion :', newdiscussionMessage);
+        try {
+            console.log('try');
+            const response = await apiClient.post('/api/discussions', {
+                content: newdiscussionMessage,
+                user: `/api/users/33`,
+                created_at: new Date(),
+                updated_at: new Date(),
+                status: true
+            });
+            const newDiscussion = response.data;
 
-    const handleCancelComment = (discussionId) => {
-        setNewCommentContent({ ...newCommentContent, [discussionId]: '' });
+            setDiscussions([newDiscussion, ...discussions]);
+            setNewdiscussionMessage('');
+            setIsPopupOpen(false);
+        } catch (error) {
+            console.error('Erreur lors de l\'ajout de la discussion:', error);
+        }
     };
-
     const handleCommentInputChange = (discussionId, value) => {
-        setNewCommentContent({ ...newCommentContent, [discussionId]: value });
+        if (value.length <= 200) {
+            setNewCommentContent({ ...newCommentContent, [discussionId]: value });
+        }
     };
+
 
     function formatElapsedTime(dateString) {
         const date = new Date(dateString);
@@ -258,22 +279,41 @@ const Discussion = () => {
         const diffInYears = Math.floor(diffInDays / 365);
         return `il y a ${diffInYears} an${diffInYears > 1 ? 's' : ''}`;
     }
-
-    if (isLoading) {
-        return <Loader />;
-    }
+    if (isLoading) { return <Loader />; }
 
     return (
         <div className="actualite-container">
             <Navbar />
             <div className="content-container">
                 <h1>Fil d’actualité</h1>
+                {/* Bouton pour ajouter une nouvelle discussion */}
+                <div className="add-discussion-section">
+                    {!isPopupOpen ? (
+                        <div className="add-discussion-button" onClick={openNewDiscussion}>+</div>
+                    ) : (
+                        <div className="new-discussion-card">
+                        <textarea
+                            ref={newDiscussionRef}
+                            placeholder="Quoi de neuf?"
+                            value={newdiscussionMessage}
+                            onChange={(e) => setNewdiscussionMessage(e.target.value)}
+                            className="new-discussion-textarea"
+                        />
+                            <div className="new-discussion-actions">
+                                <button onClick={handleAdddiscussion} className="submit-button">Publier</button>
+                                <button onClick={() => setIsPopupOpen(false)} className="cancel-button">Annuler</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
                 <div className="discussions-container">
                     {discussions.length > 0 ? (
                         discussions.map((discussion, index) => (
-                            <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`} key={discussion.id} style={{ backgroundColor: index % 2 === 0 ? 'rgba(255, 123, 0, 0.1)' : '#fff' }}>
+                            <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`} key={discussion.id}
+                                 style={{backgroundColor: index % 2 === 0 ? 'rgba(255, 123, 0, 0.1)' : '#fff'}}>
                                 <div className="discussion-header">
-                                    <img src={discussion.user?.image_profile || userProfile} alt="User Profile" className="discussion-profile-pic" />
+                                    <img src={discussion.user?.image_profile || userProfile} alt="User Profile"
+                                         className="discussion-profile-pic"/>
                                     <div className="discussion-info">
                                         <h2>{discussion.user?.full_name}</h2>
                                         <span>{formatElapsedTime(discussion.created_at)}</span>
@@ -284,7 +324,8 @@ const Discussion = () => {
                                         ? discussion.content
                                         : `${discussion.content.substring(0, 100)}...`}
                                     {discussion.content.length > 100 && (
-                                        <span className="toggle-message" onClick={() => toggleExpanddiscussion(discussion.id)}>
+                                        <span className="toggle-message"
+                                              onClick={() => toggleExpanddiscussion(discussion.id)}>
                                             {expandeddiscussions[discussion.id] ? ' Voir moins' : ' Voir plus'}
                                         </span>
                                     )}
@@ -330,15 +371,22 @@ const Discussion = () => {
                                         <div className="add-comment-section">
                                             <input
                                                 type="text"
+                                                id={`comment-input-${discussion.id}`}
                                                 value={newCommentContent[discussion.id] || ''}
                                                 onChange={(e) => handleCommentInputChange(discussion.id, e.target.value)}
                                                 placeholder="Ajouter un commentaire..."
                                                 className="comment-input"
+                                                maxLength="200"
                                             />
+                                            <div id={`character-counter-${discussion.id}`} className="character-counter">
+                                                {newCommentContent[discussion.id]?.length || 0} / 200
+                                            </div>
                                             <button onClick={() => handleAddComment(discussion.id)}
-                                                    className="comment-button">Commenter
+                                                    className="comment-button">
+                                                Commenter
                                             </button>
                                         </div>
+
                                     </div>
                                 )}
                             </div>
@@ -347,21 +395,7 @@ const Discussion = () => {
                         <p>Aucune discussion disponible pour le moment.</p>
                     )}
                 </div>
-                <div className="add-discussion-button" onClick={() => setIsPopupOpen(true)}>+</div>
             </div>
-            {isPopupOpen && (
-                <div className="popup">
-                    <div className="popup-inner">
-                        <textarea
-                            placeholder="Quoi de neuf?"
-                            value={newdiscussionMessage}
-                            onChange={(e) => setNewdiscussionMessage(e.target.value)}
-                        />
-                        <button onClick={handleAdddiscussion}>Ajouter</button>
-                        <button onClick={() => setIsPopupOpen(false)}>Annuler</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

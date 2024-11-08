@@ -123,11 +123,6 @@
     margin-bottom: 0;
 }
 
-.comment-author {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
 .comment-message {
     font-size: 14px;
     margin: 0;
@@ -158,6 +153,7 @@
     width: 50px;
     height: 50px;
     background-color: #fff;
+    z-index: 10;
     color: #FF7B00;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     font-size: 30px;
@@ -264,18 +260,9 @@
     animation: flyUp 0.8s ease forwards;
 }
 
-.comment-input {
-    width: 87%;
-    padding: 1%;
-    margin-right: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
 .comment-button {
-    padding: 12px 8px;
-    width: 10%;
+    padding: 10px 12px;
+    min-width: 90px;
     border: none;
     border-radius: 5px;
     background-color: #ff7b00;
@@ -283,7 +270,9 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 14px;
 }
+
 .comment-header {
     display: flex;
     justify-content: space-between;
@@ -301,6 +290,94 @@
     margin-left: 8px;
 }
 
+.add-comment-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.comment-input {
+    flex: 1;
+    width: calc(100% - 100px);
+    padding: 10px 60px 10px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: width 0.3s ease;
+}
+
+.character-counter {
+    position: absolute;
+    right: 130px;
+    font-size: 12px;
+    color: #555;
+    top: 30%;
+    pointer-events: none;
+}
+.new-discussion-textarea {
+    width: calc(100% - 30px);
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.new-discussion-textarea:focus {
+    border-color: #FF7B00;
+    box-shadow: 0 4px 8px rgba(255, 123, 0, 0.2);
+}
+
+.submit-button, .cancel-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button {
+    background-color: #FF7B00;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.submit-button:hover {
+    background-color: #e06b00;
+}
+
+.cancel-button {
+    background-color: #ddd;
+    color: #333;
+}
+
+.cancel-button:hover {
+    background-color: #ccc;
+}
+
+.new-discussion-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+}
 
 @keyframes flyUp {
     0% {
@@ -317,5 +394,4 @@
     .content-container {
         margin-left: 3%;
     }
-
 }
