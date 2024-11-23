@@ -21,6 +21,49 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.load-more-button {
+    background-color: #ff7b00; /* Couleur orange vif */
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.load-more-button:hover {
+    background-color: #ff8c33; /* Couleur plus claire au survol */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.load-more-button:active {
+    background-color: #ff6a00; /* Couleur plus foncée lors du clic */
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.load-more-button:disabled {
+    background-color: #ccc; /* Couleur grisée pour le bouton désactivé */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.all-loaded-message {
+    text-align: center;
+    color: #555;
+    font-size: 16px;
+    margin-top: 20px;
+    font-style: italic;
+}
+
 .orange-background {
     background-color: rgba(255, 123, 0, 0.1);
 }

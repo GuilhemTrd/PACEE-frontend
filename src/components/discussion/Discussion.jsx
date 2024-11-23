@@ -15,18 +15,28 @@ const Discussion = () => {
     const [visibleComments, setVisibleComments] = useState({});
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [newdiscussionMessage, setNewdiscussionMessage] = useState('');
+    const [isLastPage, setIsLastPage] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [newCommentContent, setNewCommentContent] = useState({});
     const [isLoadingComments, setIsLoadingComments] = useState({});
     const [flyLikeId, setFlyLikeId] = useState(null);
     const [isLiking, setIsLiking] = useState({});
     const newDiscussionRef = useRef(null);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
     const userId = localStorage.getItem('userId');
 
-    const fetchDiscussions = useCallback(async () => {
+    const fetchDiscussions = useCallback(async (page = 0) => {
+        if (isLoadingMore) return;
+        setIsLoadingMore(true);
         try {
-            const response = await apiClient.get('/api/discussions');
+            const response = await apiClient.get(`/api/discussions?page=${page}&itemsPerPage=10`);
             const discussionsData = response.data['member'] || [];
+
+            // Vérifiez si c'est la dernière page
+            if (discussionsData.length < 10) {
+                setIsLastPage(true);
+            }
 
             const updatedDiscussions = await Promise.all(
                 discussionsData.map(async (discussion) => {
@@ -40,20 +50,31 @@ const Discussion = () => {
                 })
             );
 
-            // Trier les discussions par date décroissante
             updatedDiscussions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-            setDiscussions(updatedDiscussions);
+            setDiscussions((prevDiscussions) => {
+                const newDiscussions = updatedDiscussions.filter(
+                    (newDisc) => !prevDiscussions.some((prevDisc) => prevDisc.id === newDisc.id)
+                );
+                return [...prevDiscussions, ...newDiscussions];
+            });
+
             setIsLoading(false);
         } catch (error) {
             console.error('Erreur lors de la récupération des discussions:', error);
             setIsLoading(false);
+        } finally {
+            setIsLoadingMore(false);
         }
     }, [userId]);
 
+    const loadMoreDiscussions = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
+
     useEffect(() => {
-        fetchDiscussions().then(() => console.log('Discussions récupérées'));
-    }, [fetchDiscussions]);
+        fetchDiscussions(currentPage);
+    }, [currentPage, fetchDiscussions]);
 
     const toggleExpanddiscussion = (id) => {
         setExpandeddiscussions((prevExpandeddiscussions) => ({
@@ -236,7 +257,6 @@ const Discussion = () => {
         }
     };
 
-
     function formatElapsedTime(dateString) {
         const date = new Date(dateString);
         const now = new Date();
@@ -378,7 +398,8 @@ const Discussion = () => {
                                                 className="comment-input"
                                                 maxLength="200"
                                             />
-                                            <div id={`character-counter-${discussion.id}`} className="character-counter">
+                                            <div id={`character-counter-${discussion.id}`}
+                                                 className="character-counter">
                                                 {newCommentContent[discussion.id]?.length || 0} / 200
                                             </div>
                                             <button onClick={() => handleAddComment(discussion.id)}
@@ -395,6 +416,20 @@ const Discussion = () => {
                         <p>Aucune discussion disponible pour le moment.</p>
                     )}
                 </div>
+                <div className="load-more-container">
+                    {isLastPage ? (
+                        <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
+                    ) : (
+                        isLoadingMore ? (
+                            <Loader/>
+                        ) : (
+                            <button onClick={loadMoreDiscussions} className="load-more-button">
+                                Voir plus
+                            </button>
+                        )
+                    )}
+                </div>
+
             </div>
         </div>
     );
