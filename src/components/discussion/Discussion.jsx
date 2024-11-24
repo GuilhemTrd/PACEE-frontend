@@ -56,6 +56,7 @@ const Discussion = () => {
         return `il y a ${Math.floor(diffInSeconds / 2419200)} mois`;
     };
 
+    // ** Fonctions pour les discussions **
     const fetchDiscussions = useCallback(async (page = 0) => {
         setIsLoadingMore(true);
         try {
@@ -99,9 +100,6 @@ const Discussion = () => {
         if (isLoadingMore) return;
         setCurrentPage((prevPage) => prevPage + 1);
     };
-    useEffect(() => {
-        fetchDiscussions(currentPage);
-    }, [currentPage, fetchDiscussions]);
     const toggleExpanddiscussion = (id) => {
         setExpandeddiscussions((prevExpandeddiscussions) => ({
             ...prevExpandeddiscussions,
@@ -116,46 +114,28 @@ const Discussion = () => {
             }
         }, 0);
     };
-    const toggleLike = async (id, userLiked) => {
-        if (isLiking[id]) return;
-        setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: true }));
-
+    const handleAdddiscussion = async () => {
+        console.log('Ajout de la discussion :', newdiscussionMessage);
         try {
-            let updatedLikeCount = 0;
+            console.log('try');
+            const response = await apiClient.post('/api/discussions', {
+                content: newdiscussionMessage,
+                user: `/api/users/33`,
+                created_at: new Date(),
+                updated_at: new Date(),
+                status: true
+            });
+            const newDiscussion = response.data;
 
-            if (userLiked) {
-                // Unlike the discussion
-                const likeToDelete = await apiClient.get(`/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${id}`);
-                if (likeToDelete.data['member'].length > 0) {
-                    const likeId = likeToDelete.data['member'][0].id;
-                    await apiClient.delete(`/api/discussion_likes/${likeId}`);
-                    updatedLikeCount = -1;
-                }
-            } else {
-                // Like the discussion
-                await apiClient.post('/api/discussion_likes', {
-                    discussion: `/api/discussions/${id}`,
-                    user: `/api/users/${userId}`
-                });
-                updatedLikeCount = 1;
-
-                setFlyLikeId(id);
-                setTimeout(() => setFlyLikeId(null), 800); // Réinitialise après 0.8 seconde
-            }
-
-            setDiscussions(prevDiscussions =>
-                prevDiscussions.map(discussion =>
-                    discussion.id === id
-                        ? { ...discussion, userLiked: !userLiked, likeCount: discussion.likeCount + updatedLikeCount }
-                        : discussion
-                )
-            );
+            setDiscussions([newDiscussion, ...discussions]);
+            setNewdiscussionMessage('');
+            setIsPopupOpen(false);
         } catch (error) {
-            console.error('Erreur lors du like de la discussion:', error);
-        } finally {
-            setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: false }));
+            console.error('Erreur lors de l\'ajout de la discussion:', error);
         }
     };
+
+    // ** Fonctions pour les commentaires **
     const fetchComments = async (discussionId, commentUrls) => {
         setIsLoadingComments((prev) => ({ ...prev, [discussionId]: true }));
         try {
@@ -168,8 +148,6 @@ const Discussion = () => {
                     return { ...comment, user };
                 })
             );
-
-            commentsData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
             setComments(prevComments => ({
                 ...prevComments,
@@ -184,7 +162,7 @@ const Discussion = () => {
     const toggleShowComments = (discussionId, commentUrls) => {
         setShowComments((prevShowComments) => {
             if (prevShowComments[discussionId]) {
-                return {}; // Ferme tout espace de commentaires
+                return {};
             } else {
                 if (!comments[discussionId]) {
                     fetchComments(discussionId, commentUrls);
@@ -257,34 +235,61 @@ const Discussion = () => {
             console.error("Erreur lors de l'ajout du commentaire :", error);
         }
     };
-    const handleAdddiscussion = async () => {
-        console.log('Ajout de la discussion :', newdiscussionMessage);
-        try {
-            console.log('try');
-            const response = await apiClient.post('/api/discussions', {
-                content: newdiscussionMessage,
-                user: `/api/users/33`,
-                created_at: new Date(),
-                updated_at: new Date(),
-                status: true
-            });
-            const newDiscussion = response.data;
-
-            setDiscussions([newDiscussion, ...discussions]);
-            setNewdiscussionMessage('');
-            setIsPopupOpen(false);
-        } catch (error) {
-            console.error('Erreur lors de l\'ajout de la discussion:', error);
-        }
-    };
     const handleCommentInputChange = (discussionId, value) => {
         if (value.length <= 200) {
             setNewCommentContent({ ...newCommentContent, [discussionId]: value });
         }
     };
 
-    if (isLoading) { return <Loader />; }
+    // ** Fonctions pour les likes **
+    const toggleLike = async (id, userLiked) => {
+        if (isLiking[id]) return;
+        setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: true }));
 
+        try {
+            let updatedLikeCount = 0;
+
+            if (userLiked) {
+                // Unlike the discussion
+                const likeToDelete = await apiClient.get(`/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${id}`);
+                if (likeToDelete.data['member'].length > 0) {
+                    const likeId = likeToDelete.data['member'][0].id;
+                    await apiClient.delete(`/api/discussion_likes/${likeId}`);
+                    updatedLikeCount = -1;
+                }
+            } else {
+                // Like the discussion
+                await apiClient.post('/api/discussion_likes', {
+                    discussion: `/api/discussions/${id}`,
+                    user: `/api/users/${userId}`
+                });
+                updatedLikeCount = 1;
+
+                setFlyLikeId(id);
+                setTimeout(() => setFlyLikeId(null), 800); // Réinitialise après 0.8 seconde
+            }
+
+            setDiscussions(prevDiscussions =>
+                prevDiscussions.map(discussion =>
+                    discussion.id === id
+                        ? { ...discussion, userLiked: !userLiked, likeCount: discussion.likeCount + updatedLikeCount }
+                        : discussion
+                )
+            );
+        } catch (error) {
+            console.error('Erreur lors du like de la discussion:', error);
+        } finally {
+            setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: false }));
+        }
+    };
+
+    // ** useEffect **
+    useEffect(() => {
+        fetchDiscussions(currentPage);
+    }, [currentPage, fetchDiscussions]);
+
+    // ** Rendu de la page **
+    if (isLoading) { return <Loader />; }
     return (
         <div className="actualite-container">
             <Navbar />
