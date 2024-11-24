@@ -59,7 +59,7 @@ const Discussion = () => {
     const fetchDiscussions = useCallback(async (page = 0) => {
         setIsLoadingMore(true);
         try {
-            const response = await apiClient.get(`/api/discussions?page=${page}&itemsPerPage=10`);
+            const response = await apiClient.get(`/api/discussions?page=${page}&itemsPerPage=10&order[created_at]=asc`);
             const discussionsData = response.data['member'] || [];
 
             if (discussionsData.length < 10) {
@@ -79,8 +79,6 @@ const Discussion = () => {
                     return { ...discussion, user, userLiked };
                 })
             );
-
-            updatedDiscussions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
             setDiscussions((prevDiscussions) => {
                 const newDiscussions = updatedDiscussions.filter(
