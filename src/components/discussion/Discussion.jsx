@@ -8,32 +8,60 @@ import Loader from '../loader/Loader';
 import apiClient from '../../utils/apiClient';
 
 const Discussion = () => {
-    const [discussions, setDiscussions] = useState([]);
-    const [expandeddiscussions, setExpandeddiscussions] = useState({});
-    const [showComments, setShowComments] = useState({});
-    const [comments, setComments] = useState({});
-    const [visibleComments, setVisibleComments] = useState({});
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [newdiscussionMessage, setNewdiscussionMessage] = useState('');
-    const [isLastPage, setIsLastPage] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [newCommentContent, setNewCommentContent] = useState({});
-    const [isLoadingComments, setIsLoadingComments] = useState({});
-    const [flyLikeId, setFlyLikeId] = useState(null);
-    const [isLiking, setIsLiking] = useState({});
+    // ** Références **
     const newDiscussionRef = useRef(null);
-    const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
+
+    // ** États liés à l'utilisateur **
     const userId = localStorage.getItem('userId');
 
+    // ** États globaux pour les discussions **
+    const [discussions, setDiscussions] = useState([]);
+    const [expandeddiscussions, setExpandeddiscussions] = useState({});
+    const [isLastPage, setIsLastPage] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // ** États pour les commentaires **
+    const [comments, setComments] = useState({});
+    const [showComments, setShowComments] = useState({});
+    const [visibleComments, setVisibleComments] = useState({});
+    const [newCommentContent, setNewCommentContent] = useState({});
+    const [isLoadingComments, setIsLoadingComments] = useState({});
+
+    // ** États pour la création/modification des discussions **
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [newdiscussionMessage, setNewdiscussionMessage] = useState('');
+
+    // ** États pour le chargement et les interactions **
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [isLiking, setIsLiking] = useState({});
+    const [flyLikeId, setFlyLikeId] = useState(null);
+
+    // ** Fonctions utilitaires **
+    const formatElapsedTime = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const diffInSec = Math.floor((now - date) / 1000);
+        const timezoneOffset = (new Date()).getTimezoneOffset();
+        const diffInSeconds = diffInSec - timezoneOffset * 60;
+
+        if (diffInSeconds < 0) return 'à venir';
+        if (diffInSeconds < 15) return 'à l\'instant';
+        if (diffInSeconds < 60) return `il y a ${diffInSeconds} seconde${diffInSeconds > 1 ? 's' : ''}`;
+        if (diffInSeconds < 3600) return `il y a ${Math.floor(diffInSeconds / 60)} minute${Math.floor(diffInSeconds / 60) > 1 ? 's' : ''}`;
+        if (diffInSeconds < 86400) return `il y a ${Math.floor(diffInSeconds / 3600)} heure${Math.floor(diffInSeconds / 3600) > 1 ? 's' : ''}`;
+        if (diffInSeconds < 604800) return `il y a ${Math.floor(diffInSeconds / 86400)} jour${Math.floor(diffInSeconds / 86400) > 1 ? 's' : ''}`;
+        if (diffInSeconds < 2419200) return `il y a ${Math.floor(diffInSeconds / 604800)} semaine${Math.floor(diffInSeconds / 604800) > 1 ? 's' : ''}`;
+        return `il y a ${Math.floor(diffInSeconds / 2419200)} mois`;
+    };
+
     const fetchDiscussions = useCallback(async (page = 0) => {
-        if (isLoadingMore) return;
         setIsLoadingMore(true);
         try {
             const response = await apiClient.get(`/api/discussions?page=${page}&itemsPerPage=10`);
             const discussionsData = response.data['member'] || [];
 
-            // Vérifiez si c'est la dernière page
             if (discussionsData.length < 10) {
                 setIsLastPage(true);
             }
@@ -43,7 +71,9 @@ const Discussion = () => {
                     const userResponse = await apiClient.get(discussion.user);
                     const user = userResponse.data;
 
-                    const likeResponse = await apiClient.get(`/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${discussion.id}`);
+                    const likeResponse = await apiClient.get(
+                        `/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${discussion.id}`
+                    );
                     const userLiked = likeResponse.data['member'].length > 0;
 
                     return { ...discussion, user, userLiked };
@@ -67,15 +97,13 @@ const Discussion = () => {
             setIsLoadingMore(false);
         }
     }, [userId]);
-
     const loadMoreDiscussions = () => {
+        if (isLoadingMore) return;
         setCurrentPage((prevPage) => prevPage + 1);
     };
-
     useEffect(() => {
         fetchDiscussions(currentPage);
     }, [currentPage, fetchDiscussions]);
-
     const toggleExpanddiscussion = (id) => {
         setExpandeddiscussions((prevExpandeddiscussions) => ({
             ...prevExpandeddiscussions,
@@ -257,48 +285,6 @@ const Discussion = () => {
         }
     };
 
-    function formatElapsedTime(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-
-        const diffInSec = Math.floor((now - date) / 1000);
-
-        const timezoneOffset = (new Date()).getTimezoneOffset();
-        const timezoneOffsetInSec = timezoneOffset * 60;
-
-        const diffInSeconds = diffInSec - timezoneOffsetInSec;
-        if (diffInSeconds < 0) {
-            return 'à venir';
-        }
-        if (diffInSeconds < 15) {
-            return 'à l\'instant';
-        }
-        if (diffInSeconds < 60) {
-            return `il y a ${diffInSeconds} seconde${diffInSeconds > 1 ? 's' : ''}`;
-        }
-        const diffInMinutes = Math.floor(diffInSeconds / 60);
-        if (diffInMinutes < 60) {
-            return `il y a ${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''}`;
-        }
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        if (diffInHours < 24) {
-            return `il y a ${diffInHours} heure${diffInHours > 1 ? 's' : ''}`;
-        }
-        const diffInDays = Math.floor(diffInHours / 24);
-        if (diffInDays < 7) {
-            return `il y a ${diffInDays} jour${diffInDays > 1 ? 's' : ''}`;
-        }
-        const diffInWeeks = Math.floor(diffInDays / 7);
-        if (diffInWeeks < 4) {
-            return `il y a ${diffInWeeks} semaine${diffInWeeks > 1 ? 's' : ''}`;
-        }
-        const diffInMonths = Math.floor(diffInDays / 30);
-        if (diffInMonths < 12) {
-            return `il y a ${diffInMonths} mois`;
-        }
-        const diffInYears = Math.floor(diffInDays / 365);
-        return `il y a ${diffInYears} an${diffInYears > 1 ? 's' : ''}`;
-    }
     if (isLoading) { return <Loader />; }
 
     return (
