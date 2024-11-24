@@ -51,9 +51,16 @@ const Discussion = () => {
         if (diffInSeconds < 60) return `il y a ${diffInSeconds} seconde${diffInSeconds > 1 ? 's' : ''}`;
         if (diffInSeconds < 3600) return `il y a ${Math.floor(diffInSeconds / 60)} minute${Math.floor(diffInSeconds / 60) > 1 ? 's' : ''}`;
         if (diffInSeconds < 86400) return `il y a ${Math.floor(diffInSeconds / 3600)} heure${Math.floor(diffInSeconds / 3600) > 1 ? 's' : ''}`;
-        if (diffInSeconds < 604800) return `il y a ${Math.floor(diffInSeconds / 86400)} jour${Math.floor(diffInSeconds / 86400) > 1 ? 's' : ''}`;
-        if (diffInSeconds < 2419200) return `il y a ${Math.floor(diffInSeconds / 604800)} semaine${Math.floor(diffInSeconds / 604800) > 1 ? 's' : ''}`;
-        return `il y a ${Math.floor(diffInSeconds / 2419200)} mois`;
+
+        const days = Math.floor(diffInSeconds / 86400);
+        if (days < 7) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+        if (days === 7) return `il y a 1 semaine`;
+        if (days < 30) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+        if (days === 30) return `il y a 1 mois`;
+        if (days < 90) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+
+        const months = Math.floor(days / 30);
+        return `il y a ${months} mois`;
     };
 
     // ** Fonctions pour les discussions **
