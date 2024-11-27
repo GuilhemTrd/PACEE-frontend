@@ -300,7 +300,7 @@ const Discussion = () => {
     return (
         <div className="actualite-container">
             <Navbar />
-            <div className="content-container">
+            <div className="discussion-content-container">
                 <h1>Fil d’actualité</h1>
                 {/* Bouton pour ajouter une nouvelle discussion */}
                 <div className="add-discussion-section">

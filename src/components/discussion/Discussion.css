@@ -2,7 +2,7 @@
     display: flex;
 }
 
-.content-container {
+.discussion-content-container {
     flex: 1;
     padding: 20px;
     margin-left: 18%;
@@ -40,19 +40,19 @@
 }
 
 .load-more-button:hover {
-    background-color: #ff8c33; /* Couleur plus claire au survol */
+    background-color: #ff8c33;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
 }
 
 .load-more-button:active {
-    background-color: #ff6a00; /* Couleur plus foncée lors du clic */
+    background-color: #ff6a00;
     transform: translateY(2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .load-more-button:disabled {
-    background-color: #ccc; /* Couleur grisée pour le bouton désactivé */
+    background-color: #ccc;
     cursor: not-allowed;
     box-shadow: none;
 }
