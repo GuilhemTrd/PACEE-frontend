@@ -1,0 +1,317 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ----- PAGE LAYOUT ----- */
+.profile-page {
+    display: flex;
+}
+
+/* ----- CONTENT WRAPPER ----- */
+.profile-content-wrapper {
+    flex: 1;
+    margin-left: 17%; /* Compte la largeur de la Navbar */
+    padding: 40px;
+}
+
+/* ----- HEADER SECTION ----- */
+.profile-header-container {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* ----- PROFILE AVATAR ----- */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #FF7B00;
+    margin-right: 30px;
+}
+
+.profile-info h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+}
+
+.profile-info p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* ----- PROFILE CARDS SECTION ----- */
+.profile-cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.profile-card {
+    flex: 1;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-card:hover {
+    transform: scale(1.02);
+}
+
+.profile-card h3 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.profile-card ul {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.profile-card li {
+    margin-bottom: 10px;
+}
+
+.profile-card li strong {
+    color: #333;
+}
+
+/* ----- BUTTONS SECTION ----- */
+.profile-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.profile-btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px!important;
+    transition: background-color 0.3s, transform 0.2s;
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+}
+
+.profile-btn-container {
+    flex: 1;
+}
+
+.profile-btn.edit-btn,
+.profile-btn.paceCalculate-btn {
+    background-color: #FF7B00;
+    color: #fff;
+}
+
+.profile-btn.edit-btn:hover,
+.profile-btn.paceCalculate-btn:hover {
+    background-color: #e06b00;
+}
+
+.profile-btn.logout-btn {
+    background-color: #333;
+    color: #fff;
+}
+
+.profile-btn.logout-btn:hover {
+    background-color: #444;
+}
+
+/* Conteneur des badges */
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #fbfbfb;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    width: 22%;
+}
+
+.badge-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-icon svg {
+    max-width: 60%;
+    max-height: 60%;
+}
+
+/* Styles de la modal */
+.badge-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.badge-modal svg{
+    width: 100%;
+    height: 100%;
+}
+
+.badge-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.badge-modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.badge-modal-content .badge-icon-large {
+    width: 150px;
+    height: 150px;
+    margin: 10px auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #ffa600;
+}
+
+/* ----- RESPONSIVE DESIGN ----- */
+@media (max-width: 1300px) {
+    .profile-header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .profile-info h2 {
+        font-size: 22px;
+    }
+
+    .profile-info p {
+        font-size: 14px;
+    }
+
+    .profile-cards-container {
+        flex-direction: column;
+    }
+
+    .profile-card h3 {
+        font-size: 18px;
+    }
+
+    .profile-card ul {
+        font-size: 14px;
+    }
+
+    .profile-buttons-container {
+        flex-direction: column;
+    }
+
+    .profile-btn {
+        margin: 10px 0;
+    }
+
+    .profile-content-wrapper {
+        margin-left: 13%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 972px) {
+    .navbar-container {
+        width: 100%;
+        height: 100vh;
+        left: -100%;
+        transition: left 0.3s ease;
+        background-color: #fff;
+    }
+
+    .navbar-container.open {
+        left: 0;
+    }
+
+    .profile-content-wrapper {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-info h2 {
+        font-size: 20px;
+    }
+
+    .profile-info p {
+        font-size: 14px;
+    }
+
+    .profile-card h3 {
+        font-size: 18px;
+    }
+
+    .profile-card ul {
+        font-size: 14px;
+    }
+
+    .profile-buttons-container {
+        flex-direction: column;
+    }
+
+    .profile-btn {
+        margin: 10px 0;
+    }
+
+    .profile-content-wrapper {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
