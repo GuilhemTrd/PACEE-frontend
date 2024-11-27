@@ -16,8 +16,8 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [userData, setUserData] = useState(null); // Initial state is null to indicate loading
-    const [isLoading, setIsLoading] = useState(true); // State to track loading status
+    const [userData, setUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (isMenuOpen) {
@@ -85,7 +85,7 @@ const Navbar = () => {
                     </div>
                 </Link>
                 <div className="menu">
-                    <Link to="/" className={`menu-item ${location.pathname === '/' ? 'selected' : ''}`}>
+                    <Link to="/discussion" className={`menu-item ${location.pathname === '/' ? 'selected' : ''}`}>
                         <img src={location.pathname === '/discussion' ? discussionIconColor : discussionIcon} alt="Fil de discussion" className="menu-icon" />
                         <span>Fil d’actualité</span>
                     </Link>
