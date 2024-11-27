@@ -40,7 +40,6 @@ const Profile = () => {
         try {
             const response = await apiClient.get(`/api/users/${localStorage.getItem('userId')}`);
             setUserInfo(response.data);
-            console.log('Informations utilisateur récupérées:', response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des informations utilisateur:', error);
             setError('Impossible de récupérer les informations utilisateur.');
@@ -121,7 +120,7 @@ const Profile = () => {
                                     <div
                                         className="badge-item"
                                         key={index}
-                                        onClick={() => openBadgeModal(userBadge)} // Ouvre la modal
+                                        onClick={() => openBadgeModal(userBadge)}
                                     >
                                         <div
                                             className="badge-icon"

@@ -13,7 +13,7 @@ body {
 /* ----- CONTENT WRAPPER ----- */
 .profile-content-wrapper {
     flex: 1;
-    margin-left: 17%; /* Compte la largeur de la Navbar */
+    margin-left: 17%;
     padding: 40px;
 }
 
@@ -153,6 +153,7 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     width: 22%;
+    margin: 0 auto;
 }
 
 .badge-icon {
@@ -226,6 +227,7 @@ body {
     .profile-header-container {
         flex-direction: column;
         text-align: center;
+        margin-left: 5%;
     }
 
     .profile-avatar {
@@ -235,6 +237,7 @@ body {
 
     .profile-info h2 {
         font-size: 22px;
+        margin: 0 auto;
     }
 
     .profile-info p {
@@ -243,6 +246,7 @@ body {
 
     .profile-cards-container {
         flex-direction: column;
+        margin-left: 5%;
     }
 
     .profile-card h3 {
@@ -265,6 +269,12 @@ body {
         margin-left: 13%;
         padding: 20px;
     }
+
+    .profile-buttons-container{
+        flex-direction: row;
+        margin-left: 5%;
+    }
+
 }
 
 @media (max-width: 972px) {
