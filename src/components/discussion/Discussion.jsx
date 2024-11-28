@@ -74,23 +74,10 @@ const Discussion = () => {
                 setIsLastPage(true);
             }
 
-            const updatedDiscussions = await Promise.all(
-                discussionsData.map(async (discussion) => {
-                    const userResponse = await apiClient.get(discussion.user);
-                    const user = userResponse.data;
-
-                    const likeResponse = await apiClient.get(
-                        `/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${discussion.id}`
-                    );
-                    const userLiked = likeResponse.data['member'].length > 0;
-
-                    return { ...discussion, user, userLiked };
-                })
-            );
-
             setDiscussions((prevDiscussions) => {
-                const newDiscussions = updatedDiscussions.filter(
-                    (newDisc) => !prevDiscussions.some((prevDisc) => prevDisc.id === newDisc.id)
+                // Évitez les doublons en filtrant par ID
+                const newDiscussions = discussionsData.filter(
+                    (newDiscussion) => !prevDiscussions.some((prevDiscussion) => prevDiscussion.id === newDiscussion.id)
                 );
                 return [...prevDiscussions, ...newDiscussions];
             });
@@ -102,7 +89,8 @@ const Discussion = () => {
         } finally {
             setIsLoadingMore(false);
         }
-    }, [userId]);
+    }, []);
+
     const loadMoreDiscussions = () => {
         if (isLoadingMore) return;
         setCurrentPage((prevPage) => prevPage + 1);
@@ -127,7 +115,7 @@ const Discussion = () => {
             console.log('try');
             const response = await apiClient.post('/api/discussions', {
                 content: newdiscussionMessage,
-                user: `/api/users/33`,
+                user: `/api/users/${userId}`,
                 created_at: new Date(),
                 updated_at: new Date(),
                 status: true
@@ -323,15 +311,16 @@ const Discussion = () => {
                     )}
                 </div>
                 <div className="discussions-container">
-                    {discussions.length > 0 ? (
+                    {discussions.length > 0 && (
                         discussions.map((discussion, index) => (
-                            <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`} key={discussion.id}
+                            <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`}
+                                 key={`discussion-${index}-${discussion.id}`}
                                  style={{backgroundColor: index % 2 === 0 ? 'rgba(255, 123, 0, 0.1)' : '#fff'}}>
                                 <div className="discussion-header">
                                     <img src={discussion.user?.image_profile || userProfile} alt="User Profile"
                                          className="discussion-profile-pic"/>
                                     <div className="discussion-info">
-                                        <h2>{discussion.user?.full_name}</h2>
+                                        <h2>{discussion.user?.username}</h2>
                                         <span>{formatElapsedTime(discussion.created_at)}</span>
                                     </div>
                                 </div>
@@ -371,7 +360,7 @@ const Discussion = () => {
                                                 <div className="comment" key={comment.id}>
                                                     <div className="comment-header">
                                                         <span
-                                                            className="comment-author">{comment.user?.full_name}</span>
+                                                            className="comment-author">{comment.user?.username}</span>
                                                         <span
                                                             className="comment-time">{formatElapsedTime(comment.created_at)}</span>
                                                     </div>
@@ -408,12 +397,12 @@ const Discussion = () => {
                                 )}
                             </div>
                         ))
-                    ) : (
-                        <p>Aucune discussion disponible pour le moment.</p>
-                    )}
+                    ) }
                 </div>
                 <div className="load-more-container">
-                    {isLastPage ? (
+                    {discussions.length === 0 ? (
+                        <p>Aucune discussion disponible pour le moment.</p>
+                    ) : isLastPage ? (
                         <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
                     ) : (
                         isLoadingMore ? (
