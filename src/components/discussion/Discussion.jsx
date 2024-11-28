@@ -110,16 +110,17 @@ const Discussion = () => {
         }, 0);
     };
     const handleAdddiscussion = async () => {
-        console.log('Ajout de la discussion :', newdiscussionMessage);
         try {
-            console.log('try');
+            const nowAddDiscussion = new Date();
+            nowAddDiscussion.setMinutes(nowAddDiscussion.getMinutes() - nowAddDiscussion.getTimezoneOffset());
             const response = await apiClient.post('/api/discussions', {
                 content: newdiscussionMessage,
                 user: `/api/users/${userId}`,
-                created_at: new Date(),
-                updated_at: new Date(),
+                created_at: nowAddDiscussion,
+                updated_at: nowAddDiscussion,
                 status: true
             });
+
             const newDiscussion = response.data;
 
             setDiscussions([newDiscussion, ...discussions]);
@@ -174,8 +175,7 @@ const Discussion = () => {
         }));
     };
     const handleAddComment = async (discussionId) => {
-        const nowAddComment = new Date();
-        nowAddComment.setMinutes(nowAddComment.getMinutes() - nowAddComment.getTimezoneOffset());
+
         const commentContent = newCommentContent[discussionId];
 
         if (!commentContent || commentContent.trim() === '') {
@@ -194,6 +194,8 @@ const Discussion = () => {
         }
 
         try {
+            const nowAddComment = new Date();
+            nowAddComment.setMinutes(nowAddComment.getMinutes() - nowAddComment.getTimezoneOffset());
             const response = await apiClient.post('/api/discussion_comments', {
                 content: commentContent,
                 discussion: `/api/discussions/${discussionId}`,
