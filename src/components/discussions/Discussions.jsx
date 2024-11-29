@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import './Discussion.css';
+import './Discussions.css';
 import Navbar from '../navbar/Navbar';
 import userProfile from '../../assets/temp/userProfile.png';
 import likeIcon from '../../assets/icons/like.svg';
@@ -7,7 +7,7 @@ import likeIconColor from '../../assets/icons/likeColor.svg';
 import Loader from '../loader/Loader';
 import apiClient from '../../utils/apiClient';
 
-const Discussion = () => {
+const Discussions = () => {
     // ** Références **
     const newDiscussionRef = useRef(null);
 
@@ -127,7 +127,7 @@ const Discussion = () => {
             setNewdiscussionMessage('');
             setIsPopupOpen(false);
         } catch (error) {
-            console.error('Erreur lors de l\'ajout de la discussion:', error);
+            console.error('Erreur lors de l\'ajout de la discussions:', error);
         }
     };
 
@@ -247,7 +247,7 @@ const Discussion = () => {
             let updatedLikeCount = 0;
 
             if (userLiked) {
-                // Unlike the discussion
+                // Unlike the discussions
                 const likeToDelete = await apiClient.get(`/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${id}`);
                 if (likeToDelete.data['member'].length > 0) {
                     const likeId = likeToDelete.data['member'][0].id;
@@ -255,7 +255,7 @@ const Discussion = () => {
                     updatedLikeCount = -1;
                 }
             } else {
-                // Like the discussion
+                // Like the discussions
                 await apiClient.post('/api/discussion_likes', {
                     discussion: `/api/discussions/${id}`,
                     user: `/api/users/${userId}`
@@ -274,7 +274,7 @@ const Discussion = () => {
                 )
             );
         } catch (error) {
-            console.error('Erreur lors du like de la discussion:', error);
+            console.error('Erreur lors du like de la discussions:', error);
         } finally {
             setIsLiking((prevIsLiking) => ({ ...prevIsLiking, [id]: false }));
         }
@@ -292,7 +292,7 @@ const Discussion = () => {
             <Navbar />
             <div className="discussion-content-container">
                 <h1>Fil d’actualité</h1>
-                {/* Bouton pour ajouter une nouvelle discussion */}
+                {/* Bouton pour ajouter une nouvelle discussions */}
                 <div className="add-discussion-section">
                     {!isPopupOpen ? (
                         <div className="add-discussion-button" onClick={openNewDiscussion}>+</div>
@@ -422,4 +422,4 @@ const Discussion = () => {
     );
 };
 
-export default Discussion;
+export default Discussions;

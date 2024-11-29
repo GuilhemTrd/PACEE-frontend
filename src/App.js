@@ -7,7 +7,7 @@ import './App.css';
 import Login from './components/login/Login';
 import Register from "./components/register/Register";
 /* Pages */
-import Discussion from "./components/discussion/Discussion";
+import Discussions from "./components/discussions/Discussions";
 import Profile from "./components/profile/Profile";
 import Articles from "./components/articles/Articles";
 /* Layout */
@@ -36,10 +36,10 @@ const App = () => {
                     }
                 />
                 <Route
-                    path="/discussion"
+                    path="/discussions"
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
-                            <Discussion />
+                            <Discussions />
                         </PrivateRoute>
                     }
                 />

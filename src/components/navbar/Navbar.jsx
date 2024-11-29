@@ -85,8 +85,8 @@ const Navbar = () => {
                     </div>
                 </Link>
                 <div className="menu">
-                    <Link to="/discussion" className={`menu-item ${location.pathname === '/' ? 'selected' : ''}`}>
-                        <img src={location.pathname === '/discussion' ? discussionIconColor : discussionIcon} alt="Fil de discussion" className="menu-icon" />
+                    <Link to="/discussions" className={`menu-item ${location.pathname === '/' ? 'selected' : ''}`}>
+                        <img src={location.pathname === '/discussions' ? discussionIconColor : discussionIcon} alt="Fil de discussion" className="menu-icon" />
                         <span>Fil d’actualité</span>
                     </Link>
                     <Link to="/articles" className={`menu-item ${location.pathname === '/articles' ? 'selected' : ''}`}>
