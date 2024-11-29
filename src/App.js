@@ -9,6 +9,7 @@ import Register from "./components/register/Register";
 /* Pages */
 import Discussion from "./components/discussion/Discussion";
 import Profile from "./components/profile/Profile";
+import Articles from "./components/articles/Articles";
 /* Layout */
 import Navbar from "./components/navbar/Navbar";
 
@@ -39,6 +40,14 @@ const App = () => {
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
                             <Discussion />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/articles"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
+                            <Articles />
                         </PrivateRoute>
                     }
                 />

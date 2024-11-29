@@ -1,0 +1,13 @@
+.articles-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-left: 18%;
+}
+
+.articles-content h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
