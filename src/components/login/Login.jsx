@@ -64,9 +64,6 @@ const Login = () => {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('userId', data.user.id);
-                console.log('refreshToken : ' + data.refresh_token + ' localStorage : ' + localStorage.getItem('refresh_token'));
-                console.log('token : ' + data.token + ' localStorage : ' + localStorage.getItem('token'));
-                console.log(data);
                 setSuccessMessage('Connexion réussie !');
                 navigate('/discussion');
             } else {
