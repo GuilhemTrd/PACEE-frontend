@@ -19,29 +19,24 @@ const Login = () => {
     const navigate = useNavigate();
     const passwordInputRef = useRef();
 
-    // Validation du champ email
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
 
-    // Validation du champ password
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
 
-    // Fonction pour basculer la visibilité du mot de passe
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    // Soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setErrorMessage('');
         setSuccessMessage('');
 
-        // Validation basique avant soumission
         if (!/\S+@\S+\.\S+/.test(email)) {
             setErrorMessage('Veuillez entrer un email valide.');
             return;
@@ -65,7 +60,7 @@ const Login = () => {
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('userId', data.user.id);
                 setSuccessMessage('Connexion réussie !');
-                navigate('/discussion');
+                navigate('/discussions');
             } else {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
                 passwordInputRef.current.focus();
