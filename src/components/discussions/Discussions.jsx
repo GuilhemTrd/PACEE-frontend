@@ -6,6 +6,7 @@ import likeIcon from '../../assets/icons/like.svg';
 import likeIconColor from '../../assets/icons/likeColor.svg';
 import Loader from '../loader/Loader';
 import apiClient from '../../utils/apiClient';
+import loader from "../loader/Loader";
 
 const Discussions = () => {
     // ** Références **
@@ -19,6 +20,7 @@ const Discussions = () => {
     const [expandeddiscussions, setExpandeddiscussions] = useState({});
     const [isLastPage, setIsLastPage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [filter, setFilter] = useState('recent'); // Par défaut, tri par 'recent'
 
     // ** États pour les commentaires **
     const [comments, setComments] = useState({});
@@ -64,11 +66,13 @@ const Discussions = () => {
     };
 
     // ** Fonctions pour les discussions **
-    const fetchDiscussions = useCallback(async (page = 0) => {
+    const fetchDiscussions = useCallback(async (page = 1) => {
         setIsLoadingMore(true);
         try {
-            const response = await apiClient.get(`/api/discussions?page=${page}&itemsPerPage=10&order[created_at]=asc`);
-            const discussionsData = response.data['member'] || [];
+            const response = await apiClient.get(
+                `/api/custom-filter?page=${page}&itemsPerPage=10&filter=${filter}`
+            );
+            const discussionsData = response.data?.member || [];
 
             if (discussionsData.length < 10) {
                 setIsLastPage(true);
@@ -81,7 +85,6 @@ const Discussions = () => {
                 );
                 return [...prevDiscussions, ...newDiscussions];
             });
-
             setIsLoading(false);
         } catch (error) {
             console.error('Erreur lors de la récupération des discussions:', error);
@@ -89,12 +92,15 @@ const Discussions = () => {
         } finally {
             setIsLoadingMore(false);
         }
-    }, []);
+    }, [filter]);
+
 
     const loadMoreDiscussions = () => {
-        if (isLoadingMore) return;
+        if (isLoadingMore || isLastPage) return;
+        fetchDiscussions(currentPage + 1);
         setCurrentPage((prevPage) => prevPage + 1);
     };
+
     const toggleExpanddiscussion = (id) => {
         setExpandeddiscussions((prevExpandeddiscussions) => ({
             ...prevExpandeddiscussions,
@@ -282,8 +288,11 @@ const Discussions = () => {
 
     // ** useEffect **
     useEffect(() => {
-        fetchDiscussions(currentPage);
-    }, [currentPage, fetchDiscussions]);
+        setDiscussions([]);
+        setCurrentPage(1);
+        setIsLastPage(false);
+        fetchDiscussions(1);
+    }, [filter, fetchDiscussions]);
 
     // ** Rendu de la page **
     if (isLoading) { return <Loader />; }
@@ -292,6 +301,26 @@ const Discussions = () => {
             <Navbar />
             <div className="discussion-content-container">
                 <h1>Fil d’actualité</h1>
+                <div className="filter-buttons">
+                    <button
+                        className={filter === 'recent' ? 'active' : ''}
+                        onClick={() => setFilter('recent')}
+                    >
+                        Récents
+                    </button>
+                    <button
+                        className={filter === 'most_liked' ? 'active' : ''}
+                        onClick={() => setFilter('most_liked')}
+                    >
+                        Les plus aimés
+                    </button>
+                    <button
+                        className={filter === 'trending' ? 'active' : ''}
+                        onClick={() => setFilter('trending')}
+                    >
+                        Tendances
+                    </button>
+                </div>
                 {/* Bouton pour ajouter une nouvelle discussions */}
                 <div className="add-discussion-section">
                     {!isPopupOpen ? (
@@ -399,22 +428,22 @@ const Discussions = () => {
                                 )}
                             </div>
                         ))
-                    ) }
+                    )}
                 </div>
                 <div className="load-more-container">
-                    {discussions.length === 0 ? (
-                        <p>Aucune discussion disponible pour le moment.</p>
-                    ) : isLastPage ? (
-                        <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
-                    ) : (
-                        isLoadingMore ? (
+                    {
+                        isLoading || isLoadingMore ? (
                             <Loader/>
+                        ) : discussions.length === 0 ? (
+                            <p>Aucune discussion disponible pour le moment.</p>
+                        ) : isLastPage ? (
+                            <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
                         ) : (
                             <button onClick={loadMoreDiscussions} className="load-more-button">
                                 Voir plus
                             </button>
                         )
-                    )}
+                    }
                 </div>
 
             </div>

@@ -96,6 +96,36 @@
     margin: 10px 0;
 }
 
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.filter-buttons button {
+    background-color: #fff;
+    border: 2px solid #ff7b00;
+    border-radius: 25px;
+    color: #ff7b00;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-buttons button:hover {
+    background-color: #ff7b00;
+    color: #fff;
+}
+
+.filter-buttons button.active {
+    background-color: #ff7b00;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 .toggle-message {
     color: #FF7B00;
     cursor: pointer;
