@@ -73,13 +73,13 @@ const Discussions = () => {
                 `/api/custom-filter?page=${page}&itemsPerPage=10&filter=${filter}`
             );
             const discussionsData = response.data?.member || [];
+            console.log('Discussions récupérées:', discussionsData);
 
             if (discussionsData.length < 10) {
                 setIsLastPage(true);
             }
 
             setDiscussions((prevDiscussions) => {
-                // Évitez les doublons en filtrant par ID
                 const newDiscussions = discussionsData.filter(
                     (newDiscussion) => !prevDiscussions.some((prevDiscussion) => prevDiscussion.id === newDiscussion.id)
                 );
@@ -93,7 +93,6 @@ const Discussions = () => {
             setIsLoadingMore(false);
         }
     }, [filter]);
-
 
     const loadMoreDiscussions = () => {
         if (isLoadingMore || isLastPage) return;
@@ -141,19 +140,31 @@ const Discussions = () => {
     const fetchComments = async (discussionId, commentUrls) => {
         setIsLoadingComments((prev) => ({ ...prev, [discussionId]: true }));
         try {
+            if (!Array.isArray(commentUrls)) {
+                throw new Error(`Les URLs des commentaires doivent être un tableau : reçu ${typeof commentUrls}`);
+            }
+
+            const validUrls = commentUrls.filter((url) => typeof url === 'string');
+
             const commentsData = await Promise.all(
-                commentUrls.map(async (url) => {
+                validUrls.map(async (url) => {
                     const commentResponse = await apiClient.get(url);
                     const comment = commentResponse.data;
+
+                    if (!comment.user || typeof comment.user !== 'string') {
+                        throw new Error(`Le champ 'user' dans un commentaire est invalide : ${JSON.stringify(comment)}`);
+                    }
+
                     const userResponse = await apiClient.get(comment.user);
                     const user = userResponse.data;
+
                     return { ...comment, user };
                 })
             );
 
-            setComments(prevComments => ({
+            setComments((prevComments) => ({
                 ...prevComments,
-                [discussionId]: commentsData
+                [discussionId]: commentsData,
             }));
         } catch (error) {
             console.error('Erreur lors de la récupération des commentaires:', error);
@@ -161,12 +172,15 @@ const Discussions = () => {
             setIsLoadingComments((prev) => ({ ...prev, [discussionId]: false }));
         }
     };
-    const toggleShowComments = (discussionId, commentUrls) => {
+
+
+    const toggleShowComments = (discussionId, commentIds) => {
         setShowComments((prevShowComments) => {
             if (prevShowComments[discussionId]) {
                 return {};
             } else {
                 if (!comments[discussionId]) {
+                    const commentUrls = commentIds.map((id) => `/api/discussion_comments/${id}`);
                     fetchComments(discussionId, commentUrls);
                 }
                 setVisibleComments({ [discussionId]: 5 });
@@ -174,6 +188,7 @@ const Discussions = () => {
             }
         });
     };
+
     const loadMoreComments = (id) => {
         setVisibleComments((prevVisibleComments) => ({
             ...prevVisibleComments,
@@ -253,7 +268,6 @@ const Discussions = () => {
             let updatedLikeCount = 0;
 
             if (userLiked) {
-                // Unlike the discussions
                 const likeToDelete = await apiClient.get(`/api/discussion_likes?user=/api/users/${userId}&discussion=/api/discussions/${id}`);
                 if (likeToDelete.data['member'].length > 0) {
                     const likeId = likeToDelete.data['member'][0].id;
@@ -261,7 +275,6 @@ const Discussions = () => {
                     updatedLikeCount = -1;
                 }
             } else {
-                // Like the discussions
                 await apiClient.post('/api/discussion_likes', {
                     discussion: `/api/discussions/${id}`,
                     user: `/api/users/${userId}`
