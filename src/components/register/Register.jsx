@@ -143,7 +143,7 @@ const Register = () => {
                 <img src={background} alt="Background" className="background-image" />
             </div>
             <div className="form-container">
-                <img src={logo} alt="Logo" className="logo"/>
+                <img src={logo} alt="Logo" className="logo-register"/>
                 <h1>Créer un compte</h1>
                 <form onSubmit={handleSubmit}>
                     {/* Prénom */}
@@ -256,10 +256,11 @@ const Register = () => {
                         {isLoading ? 'Inscription en cours...' : 'Créer mon compte'}
                     </button>
                 </form>
-                <div className="login-link">
-                    <button className="login-button-RegisterPage" onClick={() => navigate('/Login')}>
-                        J'ai déjà un compte
-                    </button>
+                <div className="register-links">
+                    <span>Vous avez déjà un compte ?&nbsp;</span>
+                    <a href="/register" className="register-link">
+                        Se connecter
+                    </a>
                 </div>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
