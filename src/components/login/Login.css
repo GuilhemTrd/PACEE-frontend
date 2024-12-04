@@ -9,21 +9,22 @@ body {
     width: 100vw;
 }
 
-.image-container {
+.login-container .image-container {
     flex: 1;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 100vh; /* Limiter la hauteur */
 }
 
-.background-image {
+.login-container .background-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.form-container {
+.login-container .form-container {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -31,19 +32,22 @@ body {
     align-items: center;
     padding: 20px;
     background-color: #fff;
+    overflow-y: auto; /* Permettre un scroll si nécessaire */
 }
 
-.logo {
-    width: 400px;
+.login-container .logo {
+    width: 200px;
     margin-bottom: 20px;
+    margin-top: 50px;
 }
 
-h1 {
-    font-size: 24px;
+.login-container h1 {
+    font-size: 1.5em;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-form {
+.login-container form {
     width: 100%;
     max-width: 400px;
     display: flex;
@@ -51,18 +55,18 @@ form {
     align-items: center;
 }
 
-.form-group {
+.login-container .form-group {
     margin-bottom: 15px;
     width: 100%;
     box-sizing: border-box;
 }
 
-.input-icon {
+.login-container .input-icon {
     position: relative;
     width: 100%;
 }
 
-.input-icon img {
+.login-container .input-icon img {
     position: absolute;
     left: 10px;
     top: 50%;
@@ -71,9 +75,9 @@ form {
     height: 20px;
 }
 
-.input-icon input {
-    width: calc(100% - 5px);
-    padding: 10px 10px 10px 40px;
+.login-container .input-icon input {
+    width: calc(100% - 10px);
+    padding: 12px 10px 12px 40px;
     font-size: 14px;
     border: none;
     border-bottom: 1px solid #111;
@@ -81,155 +85,132 @@ form {
     box-sizing: border-box;
 }
 
-.input-icon input:focus {
+.login-container .input-icon input:focus {
     border-bottom: 1px solid #FF7B00;
 }
 
-.password-validation {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-    font-size: 14px;
-    width: 100%;
-}
-
-.password-validation li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.password-validation li img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.password-validation li.valid {
-    color: green;
-}
-
-.password-validation li.invalid {
-    color: red;
-}
-
-@keyframes shake {
-    0% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(7px); }
-    100% { transform: translateX(0); }
-}
-
-.shake {
-    animation: shake 1s;
-}
-
-.login-button {
+.login-container .login-button {
     margin-top: 10px;
     width: 100%;
-    padding: 15px;
-    font-size: 16px;
+    padding: 12px;
+    font-size: 1em;
     background-color: black;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-bottom: 15px;
     box-sizing: border-box;
 }
 
-.login-button:hover {
+.login-container .login-button:hover {
     background: #333333;
 }
 
-.register-button-loginPage {
+.login-container .error-message,
+.login-container .success-message {
+    font-size: 0.9em;
+    padding: 10px 15px;
     margin-top: 10px;
-    padding: 10px;
-    font-size: 12px;
-    background-color: white;
-    color: black;
     border-radius: 10px;
-    cursor: pointer;
-    box-sizing: border-box;
-    border: 2px solid black;
+    text-align: center;
 }
 
-.register-button-loginPage:hover {
-    background: #eceaea;
-    color: black;
-    border: 2px solid black;
-    border-radius: 10px;
-}
-
-/* Toggle visibility icon for password */
-.toggle-visibility-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.error-message {
+.login-container .error-message {
     color: red;
     background-color: #fddcdc;
-    padding: 15px 10px;
-    border: red 3px solid;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 12px;
+    border: red 2px solid;
 }
 
-.success-message {
-    color: #5ec146;
-    background-color: #e4fddc;
-    padding: 15px 10px;
-    border: #5ec146 3px solid;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 14px;
+.login-container .success-message {
+    color: green;
+    background-color: #dffddc;
+    border: green 2px solid;
 }
 
+/* Responsive design */
 @media (max-width: 1100px) {
     .login-container {
         flex-direction: column;
-        justify-content: center;
     }
 
-    .image-container {
-        height: 40vh;
+    .login-container .image-container {
+        flex: 1;
+        height: 40vh; /* Réduire la hauteur */
+        max-height: 40vh;
     }
 
-    .background-image {
-        height: 100%;
+    .login-container .background-image {
+        object-fit: cover;
+    }
+
+    .login-container .form-container {
+        flex: 1;
+        height: auto;
+        padding: 15px;
+    }
+
+    .login-container .logo {
+        width: 150px; /* Réduction pour plus petit écran */
+    }
+
+    .login-container h1 {
+        font-size: 1.2em;
+    }
+
+    .login-container .login-button {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+
+    .login-container .input-icon input {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container .form-container {
+        padding: 10px;
+    }
+
+    .login-container h1 {
+        font-size: 1.1em;
+    }
+
+    .login-container .login-button {
+        font-size: 0.8em;
+        padding: 10px;
+    }
+
+    .login-container .input-icon img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .login-container .input-icon input {
+        font-size: 0.85em;
     }
 }
 
 @media (max-width: 480px) {
-    .image-container {
+    .login-container .image-container {
         display: none;
     }
 
-    .form-container {
+    .login-container .form-container {
         width: 90%;
-        padding: 10px;
+        padding: 15px;
     }
 
-    .logo {
-        width: 120px;
+    .login-container h1 {
+        font-size: 1em;
     }
 
-    h1 {
-        font-size: 20px;
-    }
-
-    .login-button, .google-login-button {
-        font-size: 14px;
-        padding: 10px;
+    .login-container .login-button {
+        font-size: 0.8em;
+        padding: 12px;
     }
 }
+
 .login-links {
     margin-top: 15px;
     text-align: center;
