@@ -37,6 +37,7 @@ body {
 
 .logo-register {
     width: 30%;
+    min-width: 120px;
     margin-bottom: 10px;
 }
 
@@ -168,21 +169,48 @@ form {
 .register-links a:hover {
     text-decoration: underline;
 }
-
 @media (max-width: 1100px) {
     .register-container {
         flex-direction: column;
-        justify-content: center;
     }
 
     .image-container {
         height: 40vh;
+        overflow-y: auto;
     }
 
     .background-image {
-        height: 100%;
+        height: 20%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .form-container {
+        height: 60vh;
+        overflow-y: auto;
+        padding-top: 30%;
+    }
+
+    h1 {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+
+    .register-button {
+        font-size: 0.9em;
+        padding: 12px;
+    }
+
+    .input-icon img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .input-icon input {
+        font-size: 0.85em;
     }
 }
+
 
 /* Styles pour la visibilité des mots de passe */
 .toggle-visibility-password {
@@ -196,6 +224,10 @@ form {
 }
 
 @media (max-width: 768px) {
+    .image-container {
+        display: none;
+    }
+
     .form-container {
         padding: 20px;
     }
@@ -227,6 +259,7 @@ form {
     .form-container {
         width: 90%;
         padding: 15px;
+        overflow-y: auto;
     }
 
     h1 {
