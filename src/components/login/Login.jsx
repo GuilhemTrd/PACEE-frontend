@@ -78,12 +78,12 @@ const Login = () => {
                 <img src={background} alt="Background" className="background-image" />
             </div>
             <div className="form-container">
-                <img src={logo} alt="Logo" className="logo" />
+                <img src={logo} alt="Logo" className="logo"/>
                 <h1>Se connecter</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <div className="input-icon">
-                            <img src={mailIcon} alt="Mail Icon" />
+                            <img src={mailIcon} alt="Mail Icon"/>
                             <input
                                 type="email"
                                 name="email"
@@ -119,10 +119,17 @@ const Login = () => {
                         {isLoading ? 'Connexion en cours...' : 'Se connecter'}
                     </button>
                 </form>
-                <div className="register-link">
-                    <button className="register-button-loginPage" onClick={() => navigate('/Register')}>
-                        Je n'ai pas de compte
-                    </button>
+
+                <div className="login-links">
+                    <span>Mot de passe oublié ?&nbsp;</span>
+                    <a href="/forgot-password" className="forgot-password-link">
+                       Modifier
+                    </a>
+                    <br/>
+                    <span>Vous n'avez pas de compte ?&nbsp;</span>
+                    <a href="/register" className="register-link">
+                        S'inscrire
+                    </a>
                 </div>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}

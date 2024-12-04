@@ -230,3 +230,24 @@ form {
         padding: 10px;
     }
 }
+.login-links {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.login-links span {
+    color: #6b6b6b;
+    display: inline;
+}
+
+.login-links a {
+    color: #FF7B00;
+    text-decoration: none;
+}
+
+.login-links a:hover {
+    text-decoration: underline;
+}
+
