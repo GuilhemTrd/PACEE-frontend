@@ -371,7 +371,7 @@ const Discussions = () => {
                                 <p className="discussion-message">
                                     {expandeddiscussions[discussion.id] || discussion.content.length <= 100
                                         ? discussion.content
-                                        : `${discussion.content.substring(0, 100)}...`}
+                                        : `${discussion.content.substring(0, 150)}...`}
                                     {discussion.content.length > 100 && (
                                         <span className="toggle-message"
                                               onClick={() => toggleExpanddiscussion(discussion.id)}>
