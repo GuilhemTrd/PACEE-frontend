@@ -8,10 +8,8 @@ import eyeOpenIcon from '../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
 import checkIcon from '../../assets/icons/check.svg';
 import crossIcon from '../../assets/icons/cross.svg';
-import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-    const navigate = useNavigate();
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');

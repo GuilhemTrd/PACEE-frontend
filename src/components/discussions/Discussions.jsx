@@ -6,7 +6,6 @@ import likeIcon from '../../assets/icons/like.svg';
 import likeIconColor from '../../assets/icons/likeColor.svg';
 import Loader from '../loader/Loader';
 import apiClient from '../../utils/apiClient';
-import loader from "../loader/Loader";
 
 const Discussions = () => {
     // ** Références **
