@@ -5,6 +5,8 @@ import Navbar from '../navbar/Navbar';
 import userProfilePlaceholder from '../../assets/temp/userProfile.png';
 import apiClient from '../../utils/apiClient';
 import Loader from "../loader/Loader";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -12,6 +14,7 @@ const Profile = () => {
     const [error, setError] = useState(null);
     const [selectedBadge, setSelectedBadge] = useState(null);
     const modalRef = useRef(null);
+    const [pathProfilePicture, setPathProfilePicture] = useState(null);
 
     const formatTime = (isoString) => {
         if (!isoString) return '-';
@@ -39,10 +42,14 @@ const Profile = () => {
     const fetchUserInfo = async () => {
         try {
             const response = await apiClient.get(`/api/users/${localStorage.getItem('userId')}`);
-            setUserInfo(response.data);
+            const data = response.data;
+
+            setUserInfo(data);
+            setPathProfilePicture(`${process.env.REACT_APP_API_URL}${data.image_profile}`);
         } catch (error) {
             console.error('Erreur lors de la récupération des informations utilisateur:', error);
             setError('Impossible de récupérer les informations utilisateur.');
+            toast.error('Impossible de récupérer les informations utilisateur.');
         } finally {
             setIsLoading(false);
         }
@@ -62,6 +69,55 @@ const Profile = () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
+
+    const handleEditAvatar = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+
+        input.onchange = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+            if (!allowedTypes.includes(file.type)) {
+                toast.warning("Seuls les fichiers JPEG, PNG et GIF sont acceptés.");
+                return;
+            }
+            if (file.size > maxFileSize) {
+                toast.warning("La taille du fichier ne doit pas dépasser 2MB.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image_profile', file);
+
+            try {
+                const uploadResponse = await apiClient.post(
+                    `/api/users/${localStorage.getItem('userId')}/upload-avatar`,
+                    formData
+                );
+                const updatedImageProfile = uploadResponse.data.image_profile;
+                const timestampedUrl = `${process.env.REACT_APP_API_URL}${updatedImageProfile}?timestamp=${new Date().getTime()}`;
+
+                setPathProfilePicture(timestampedUrl);
+                setUserInfo((prev) => ({
+                    ...prev,
+                    image_profile: updatedImageProfile,
+                }));
+
+                toast.success("Votre photo de profil a été mise à jour avec succès !");
+                localStorage.setItem('profileUpdated', true);
+
+            } catch {
+                toast.error("Une erreur s'est produite lors de la mise à jour de votre photo de profil.");
+            }
+        };
+
+        input.click();
+    };
 
     const logout = () => {
         localStorage.clear();
@@ -95,22 +151,28 @@ const Profile = () => {
 
     return (
         <div className="profile-page">
-            <Navbar />
+            <Navbar/>
+            <ToastContainer/>
             <div className="profile-content-wrapper">
                 {/* En-tête de profil */}
                 <div className="profile-header-container">
-                    <img
-                        src={userInfo.image_profile || userProfilePlaceholder}
-                        alt="Avatar utilisateur"
-                        className="profile-avatar"
-                    />
-                    <div className="profile-info">
+                    <div className="profile-avatar-wrapper">
+                        <img
+                            src={pathProfilePicture || userProfilePlaceholder}
+                            alt="Avatar utilisateur"
+                            className="profile-avatar"
+                        />
+                        <button className="edit-avatar-btn" onClick={handleEditAvatar}>
+                            ✏️
+                        </button>
+                    </div>
+                    <div className="profile-info-user">
                         <h2>{userInfo.username || 'Utilisateur inconnu'}</h2>
                         <p>Email : {userInfo.email || 'Non spécifié'}</p>
                         <p>Membre depuis : {formatDate(userInfo.created_at)}</p>
                     </div>
                 </div>
-
+                {/* Cartes */}
                 <div className="profile-cards-container">
                     <div className="profile-card">
                         <h3>Badges</h3>
@@ -124,7 +186,7 @@ const Profile = () => {
                                     >
                                         <div
                                             className="badge-icon"
-                                            dangerouslySetInnerHTML={{ __html: userBadge.badge.svg }}
+                                            dangerouslySetInnerHTML={{__html: userBadge.badge.svg}}
                                         ></div>
                                     </div>
                                 ))
@@ -175,7 +237,7 @@ const Profile = () => {
                         <h2>{selectedBadge.badge.name}</h2>
                         <div
                             className="badge-icon-large"
-                            dangerouslySetInnerHTML={{ __html: selectedBadge.badge.svg }}
+                            dangerouslySetInnerHTML={{__html: selectedBadge.badge.svg}}
                         ></div>
                         <p>{selectedBadge.badge.description}</p>
                         <p>Obtenu le : {selectedBadge.awarded_at}</p>

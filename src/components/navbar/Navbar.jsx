@@ -35,7 +35,9 @@ const Navbar = () => {
                 setUserData({
                     fullName: data.full_name,
                     email: data.email,
-                    imageProfile: data.image_profile,
+                    imageProfile: data.image_profile
+                        ? `${process.env.REACT_APP_API_URL}${data.image_profile}` // Construire l'URL complète
+                        : userProfileDefault,
                 });
                 setIsLoading(false);
             } catch (error) {
@@ -75,7 +77,7 @@ const Navbar = () => {
                 </div>
                 <Link to="/profile" className="profile-container">
                     <img
-                        src={userData.imageProfile ? userData.imageProfile : userProfileDefault}
+                        src={userData.imageProfile}
                         alt="User Profile"
                         className="profile-pic"
                     />
