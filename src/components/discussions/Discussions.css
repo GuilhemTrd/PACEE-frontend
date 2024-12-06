@@ -477,6 +477,11 @@
     .content-container {
         margin-left: 3%;
     }
+    .discussion-content-container {
+        margin-left: 2%;
+        width: 100%;
+        max-width: 94%;
+    }
 }
 
 .comment-message {
