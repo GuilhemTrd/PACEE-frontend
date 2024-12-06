@@ -72,8 +72,6 @@ const Discussions = () => {
                 `/api/custom-filter?page=${page}&itemsPerPage=10&filter=${filter}`
             );
             const discussionsData = response.data?.member || [];
-            console.log('Discussions récupérées:', discussionsData);
-
             if (discussionsData.length < 10) {
                 setIsLastPage(true);
             }
