@@ -33,10 +33,10 @@ const Navbar = () => {
                 const response = await apiClient.get(`/api/users/${localStorage.getItem('userId')}`);
                 const data = response.data;
                 setUserData({
-                    fullName: data.full_name,
+                    fullName: data.username,
                     email: data.email,
                     imageProfile: data.image_profile
-                        ? `${process.env.REACT_APP_API_URL}${data.image_profile}` // Construire l'URL complète
+                        ? `${process.env.REACT_APP_API_URL}${data.image_profile}`
                         : userProfileDefault,
                 });
                 setIsLoading(false);
