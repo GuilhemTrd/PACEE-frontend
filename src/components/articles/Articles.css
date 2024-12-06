@@ -6,8 +6,60 @@
     margin-left: 18%;
 }
 
+.articles-content {
+    width: 100%;
+    max-width: 1200px;
+}
+
 .articles-content h1 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.article-card {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+}
+
+.article-tag {
+    display: inline-block;
+    background: #ff6700;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.article-title {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.article-excerpt {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
 }
