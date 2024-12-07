@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../navbar/Navbar';
 import apiClient from '../../utils/apiClient';
 import './ArticleDetail.css';
 
 const ArticleDetail = () => {
-    const { id } = useParams(); // Récupère l'ID de l'article depuis l'URL
+    const { id } = useParams();
     const [article, setArticle] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchArticle = async () => {
+    const fetchArticle = useCallback(async () => {
         try {
             const response = await apiClient.get(`/api/articles/${id}`);
             setArticle(response.data);
@@ -20,15 +20,11 @@ const ArticleDetail = () => {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const handleImageError = (event) => {
-        event.target.style.display = 'none';
-    };
+    }, [id]);
 
     useEffect(() => {
         fetchArticle();
-    }, [id]);
+    }, [fetchArticle]);
 
     if (isLoading) {
         return (
