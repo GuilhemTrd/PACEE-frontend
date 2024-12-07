@@ -10,6 +10,7 @@ import Register from "./components/register/Register";
 import Discussions from "./components/discussions/Discussions";
 import Profile from "./components/profile/Profile";
 import Articles from "./components/articles/Articles";
+import ArticleDetail from "./components/articleDetail/ArticleDetail";
 /* Layout */
 import Navbar from "./components/navbar/Navbar";
 
@@ -48,6 +49,14 @@ const App = () => {
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
                             <Articles />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/articles/:id"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
+                            <ArticleDetail />
                         </PrivateRoute>
                     }
                 />

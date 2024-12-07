@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Importer Link
 import './Articles.css';
 import Navbar from '../navbar/Navbar';
 import apiClient from '../../utils/apiClient';
@@ -56,11 +57,15 @@ const Articles = () => {
                 <h1>Nos Articles</h1>
                 <div className="articles-grid">
                     {articles.map((article) => (
-                        <div key={article.id} className="article-card">
+                        <Link
+                            to={`/articles/${article.id}`}
+                            key={article.id}
+                            className="article-card"
+                        >
                             <span className="article-tag">CONSEILS</span>
                             <h2 className="article-title">{article.title}</h2>
                             <p className="article-excerpt">{article.description}</p>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
