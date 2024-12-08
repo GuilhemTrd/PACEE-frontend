@@ -38,6 +38,9 @@ const Discussions = () => {
     const [isLiking, setIsLiking] = useState({});
     const [flyLikeId, setFlyLikeId] = useState(null);
 
+    // ** Référence pour le cache des discussions **
+    const cacheRef = useRef({});
+
     // ** Fonctions utilitaires **
     const formatElapsedTime = (dateString) => {
         const date = new Date(dateString);
@@ -64,37 +67,51 @@ const Discussions = () => {
         return `il y a ${months} mois`;
     };
 
+
     // ** Fonctions pour les discussions **
     const fetchDiscussions = useCallback(async (page = 1) => {
+        const cacheKey = `${filter}-${page}`;
+        if (cacheRef.current[cacheKey]) {
+            setDiscussions((prev) => {
+                const newItems = cacheRef.current[cacheKey].filter(
+                    (item) => !prev.some((d) => d.id === item.id)
+                );
+                return [...prev, ...newItems];
+            });
+            setIsLastPage(cacheRef.current[cacheKey].length < 10);
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoadingMore(true);
         try {
             const response = await apiClient.get(
                 `/api/custom-filter?page=${page}&itemsPerPage=10&filter=${filter}`
             );
             const discussionsData = response.data?.member || [];
-            if (discussionsData.length < 10) {
-                setIsLastPage(true);
-            }
+            cacheRef.current[cacheKey] = discussionsData;
 
-            setDiscussions((prevDiscussions) => {
-                const newDiscussions = discussionsData.filter(
-                    (newDiscussion) => !prevDiscussions.some((prevDiscussion) => prevDiscussion.id === newDiscussion.id)
+            setDiscussions((prev) => {
+                const uniqueItems = discussionsData.filter(
+                    (item) => !prev.some((d) => d.id === item.id)
                 );
-                return [...prevDiscussions, ...newDiscussions];
+                return [...prev, ...uniqueItems];
             });
-            setIsLoading(false);
+            setIsLastPage(discussionsData.length < 10);
         } catch (error) {
-            console.error('Erreur lors de la récupération des discussions:', error);
-            setIsLoading(false);
+            console.error('Erreur lors de la récupération des discussions :', error);
         } finally {
+            setIsLoading(false);
             setIsLoadingMore(false);
         }
     }, [filter]);
 
+
     const loadMoreDiscussions = () => {
         if (isLoadingMore || isLastPage) return;
-        fetchDiscussions(currentPage + 1);
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        fetchDiscussions(nextPage);
     };
 
     const toggleExpanddiscussion = (id) => {
@@ -296,13 +313,20 @@ const Discussions = () => {
         }
     };
 
-    // ** useEffect **
     useEffect(() => {
-        setDiscussions([]);
-        setCurrentPage(1);
-        setIsLastPage(false);
-        fetchDiscussions(1);
+        const cacheKey = `${filter}-1`;
+        if (cacheRef.current[cacheKey]) {
+            setDiscussions(cacheRef.current[cacheKey]);
+            setIsLastPage(cacheRef.current[cacheKey].length < 10);
+            setIsLoading(false);
+        } else {
+            setDiscussions([]);
+            setCurrentPage(1);
+            setIsLastPage(false);
+            fetchDiscussions(1);
+        }
     }, [filter, fetchDiscussions]);
+
 
     // ** Rendu de la page **
     if (isLoading) { return <Loader />; }
