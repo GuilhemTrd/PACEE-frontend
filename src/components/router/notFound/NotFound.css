@@ -36,6 +36,18 @@
     margin-bottom: 20px;
 }
 
+.back-button {
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: white;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: 2px solid #ff8c33;
+    margin-bottom: 20px;
+    color: #ff8c33;
+}
+
 .not-found-links {
     display: flex;
     gap: 10px;

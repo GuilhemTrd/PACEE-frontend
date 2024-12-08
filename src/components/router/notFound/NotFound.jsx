@@ -9,6 +9,9 @@ const NotFound = () => (
             <img src={logo} alt="Logo" className="not-found-logo" />
             <h1>404 - Page introuvable</h1>
             <p>La page que vous recherchez n'existe pas ou a été déplacée.</p>
+            <button onClick={() => window.history.back()} className="back-button">
+                Retourner à la page précédente
+            </button>
             <div className="not-found-links">
                 <Link to="/login" className="not-found-link">
                     Se connecter
