@@ -58,7 +58,7 @@ body {
 .profile-info {
     display: flex;
     flex-direction: column;
-    max-width: calc(100% - 30px); /* Empêche le dépassement de l'email */
+    max-width: calc(100% - 30px);
 }
 
 .profile-info h2 {
@@ -70,9 +70,9 @@ body {
     margin: 0;
     font-size: 14px;
     color: gray;
-    white-space: nowrap; /* Garde le texte sur une seule ligne */
-    overflow: hidden; /* Cache le texte qui dépasse */
-    text-overflow: ellipsis; /* Ajoute "..." si le texte dépasse */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .menu {
@@ -84,7 +84,7 @@ body {
     align-items: center;
     color: black;
     text-decoration: none;
-    padding: 10px 12px;
+    padding: 5px 12px;
     border-radius: 8px;
     transition: background-color 0.3s;
     border: 2px solid white;
@@ -96,7 +96,6 @@ body {
 
 .menu-item.selected {
     border-radius: 15px;
-    padding-left: 12px;
 }
 
 .menu-item:hover {
@@ -162,12 +161,10 @@ h3 {
     transform: rotate(45deg) translate(-5px, -6px);
 }
 
-/* Désactiver le scroll */
 .no-scroll {
     overflow: hidden;
 }
 
-/* Responsive styling for various screen sizes */
 @media (max-width: 1500px) {
     .profile-container {
         flex-direction: column;
@@ -188,7 +185,6 @@ h3 {
     .social-link,
     .category-link {
         font-size: 15px;
-        padding: 8px 10px;
     }
 
     .profile-info h2 {
