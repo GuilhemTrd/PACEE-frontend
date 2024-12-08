@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Articles.css';
 import Navbar from '../navbar/Navbar';
@@ -12,13 +12,38 @@ const Articles = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLastPage, setIsLastPage] = useState(false);
 
+    // Cache pour éviter de recharger les mêmes données
+    const cacheRef = useRef({});
+
     const fetchArticles = async (page = 1) => {
+        const cacheKey = `page-${page}`;
+        if (cacheRef.current[cacheKey]) {
+            // Si la page est déjà en cache, utiliser les données mises en cache
+            console.log(`Using cached data for page ${page}`);
+            const cachedData = cacheRef.current[cacheKey];
+            setArticles((prevArticles) => {
+                const articleIds = new Set(prevArticles.map((article) => article.id));
+                const newItems = cachedData.filter((item) => !articleIds.has(item.id));
+                return [...prevArticles, ...newItems];
+            });
+            setIsLastPage(cachedData.length < 10);
+            setIsLoading(false);
+            setIsLoadingMore(false); // Important pour éviter les états bloqués
+            return; // Ne pas appeler l'API
+        }
+
         setIsLoadingMore(true);
         try {
+            console.log(`Fetching data from API for page ${page}...`);
             const response = await apiClient.get(`/api/articles?page=${page}&itemsPerPage=10`);
             const articlesData = response.data?.member || [];
-            setArticles((prevArticles) => [...prevArticles, ...articlesData]);
-            setIsLastPage(articlesData.length < 10);
+            cacheRef.current[cacheKey] = articlesData; // Stocker les articles dans le cache
+            setArticles((prevArticles) => {
+                const articleIds = new Set(prevArticles.map((article) => article.id));
+                const newItems = articlesData.filter((item) => !articleIds.has(item.id));
+                return [...prevArticles, ...newItems];
+            });
+            setIsLastPage(articlesData.length < 10); // Moins de 10 articles signifie qu'on est à la dernière page
         } catch (err) {
             console.error('Erreur lors de la récupération des articles:', err);
             setError("Impossible de charger les articles pour le moment.");
@@ -36,7 +61,6 @@ const Articles = () => {
     const loadMoreArticles = () => {
         if (isLoadingMore || isLastPage) return;
         const nextPage = currentPage + 1;
-        console.log(`Fetching articles for page ${nextPage}...`);
         setCurrentPage(nextPage);
         fetchArticles(nextPage);
     };
