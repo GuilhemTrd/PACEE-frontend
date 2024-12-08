@@ -12,6 +12,7 @@ import Profile from "./components/profile/Profile";
 import Articles from "./components/articles/Articles";
 import ArticleDetail from "./components/articleDetail/ArticleDetail";
 import CreateArticle from "./components/createArticle/CreateArticle";
+import Settings from "./components/settings/Settings";
 /* Layout */
 import Navbar from "./components/navbar/Navbar";
 
@@ -66,6 +67,14 @@ const App = () => {
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
                             <CreateArticle />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/settings"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
+                            <Settings />
                         </PrivateRoute>
                     }
                 />

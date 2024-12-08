@@ -1,0 +1,30 @@
+.settings-container {
+    margin-left: 20%;
+    margin-right: 2%;
+}
+
+.settings-content {
+    padding: 20px;
+}
+
+.settings-list {
+    list-style: none;
+    padding: 0;
+}
+
+.settings-list li {
+    margin: 10px 0;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}

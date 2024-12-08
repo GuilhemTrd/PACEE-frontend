@@ -97,7 +97,7 @@ const Navbar = () => {
                     </Link>
                     <Link to="/settings" className={`menu-item ${location.pathname === '/settings' ? 'selected' : ''}`}>
                         <img src={location.pathname === '/settings' ? settingsIconColor : settingsIcon} alt="Settings" className="menu-icon" />
-                        <span>Settings</span>
+                        <span>Paramètres</span>
                     </Link>
                 </div>
                 <div className="socials">
