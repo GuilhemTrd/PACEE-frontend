@@ -48,6 +48,13 @@ const ArticleDetail = () => {
         );
     }
 
+    // Ajoutez la base URL devant les chemins relatifs des images
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const contentWithFullImageUrls = article.content.replace(
+        /<img src="\/uploads\//g, // Remplace uniquement les chemins relatifs commençant par /uploads/
+        `<img src="${apiUrl}/uploads/`
+    );
+
     return (
         <div className="article-detail-container">
             <Navbar />
@@ -57,7 +64,7 @@ const ArticleDetail = () => {
                 <div
                     className="article-detail-body"
                     dangerouslySetInnerHTML={{
-                        __html: article.content.replace(
+                        __html: contentWithFullImageUrls.replace(
                             /<img /g,
                             '<img onError="this.style.display=\'none\'" '
                         ),

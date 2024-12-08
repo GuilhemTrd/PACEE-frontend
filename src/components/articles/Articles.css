@@ -64,3 +64,20 @@
     color: #555;
     line-height: 1.5;
 }
+
+.create-article-button {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #ff6700;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.create-article-button:hover {
+    background-color: #cf5604;
+}
+

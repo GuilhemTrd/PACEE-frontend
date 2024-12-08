@@ -55,6 +55,10 @@ const Articles = () => {
             <Navbar />
             <div className="articles-content">
                 <h1>Nos Articles</h1>
+                <Link to="/create-article" className="create-article-button">
+                    Créer un Nouvel Article
+                </Link>
+
                 <div className="articles-grid">
                     {articles.map((article) => (
                         <Link

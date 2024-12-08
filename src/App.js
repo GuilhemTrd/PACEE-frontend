@@ -11,6 +11,7 @@ import Discussions from "./components/discussions/Discussions";
 import Profile from "./components/profile/Profile";
 import Articles from "./components/articles/Articles";
 import ArticleDetail from "./components/articleDetail/ArticleDetail";
+import CreateArticle from "./components/createArticle/CreateArticle";
 /* Layout */
 import Navbar from "./components/navbar/Navbar";
 
@@ -57,6 +58,14 @@ const App = () => {
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
                             <ArticleDetail />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/create-article"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
+                            <CreateArticle />
                         </PrivateRoute>
                     }
                 />
