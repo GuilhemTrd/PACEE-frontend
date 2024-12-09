@@ -1,6 +1,9 @@
 .actualite-container {
     display: flex;
 }
+html {
+    overflow-y: scroll; /* Toujours afficher la barre de défilement */
+}
 
 .discussion-content-container {
     flex: 1;
@@ -22,6 +25,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 100%;
+    min-width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;
     box-sizing: border-box;
@@ -101,10 +105,12 @@
 }
 
 .discussion-message {
-    font-size: 14px;
-    margin: 10px 0;
-    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
+
 
 .filter-buttons {
     display: flex;
@@ -130,11 +136,11 @@
 }
 
 .filter-buttons button.active {
+    border: 2px solid #ff7b00;
     background-color: #ff7b00;
     color: #fff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 .toggle-message {
     color: #FF7B00;
@@ -491,4 +497,17 @@
     overflow-wrap: break-word;
     max-width: 90%;
     line-height: 1.5;
+}
+
+@media (max-width: 400px) {
+    .filter-buttons {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .filter-buttons button {
+        width: 80%;
+        text-align: center;
+    }
 }
