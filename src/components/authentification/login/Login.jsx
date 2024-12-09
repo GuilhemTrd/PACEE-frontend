@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import './Login.css';
 import logo from '../../../assets/logo/logo-typographique.png';
 import background from '../../../assets/images/LoginRegister_img.png';
@@ -20,55 +20,69 @@ const Login = () => {
     const passwordInputRef = useRef();
 
     const handleEmailChange = (e) => {
+        console.log('Email modifié:', e.target.value); // Debug Email
         setEmail(e.target.value);
     };
 
     const handlePasswordChange = (e) => {
+        console.log('Mot de passe modifié:', e.target.value); // Debug Mot de Passe
         setPassword(e.target.value);
     };
 
     const togglePasswordVisibility = () => {
+        console.log('Visibilité du mot de passe:', !passwordVisible); // Debug Visibilité
         setPasswordVisible(!passwordVisible);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Formulaire soumis'); // Debug Soumission
         setIsLoading(true);
         setErrorMessage('');
         setSuccessMessage('');
 
+        console.log('Validation email et mot de passe...'); // Debug Validation
         if (!/\S+@\S+\.\S+/.test(email)) {
             setErrorMessage('Veuillez entrer un email valide.');
+            console.log('Erreur: Email invalide'); // Debug Email invalide
             return;
         }
 
         if (password.length < 8) {
             setErrorMessage('Le mot de passe doit comporter au moins 8 caractères.');
+            console.log('Erreur: Mot de passe trop court'); // Debug Mot de passe invalide
             passwordInputRef.current.focus();
             return;
         }
 
         try {
+            console.log('Envoi des données au backend...'); // Debug Envoi API
             const response = await apiClient.post('/login', {
                 email,
                 password,
             });
 
+            console.log('Réponse du backend:', response); // Debug Réponse API
             if (response.status === 200) {
                 const data = response.data;
+                console.log('Connexion réussie, données utilisateur:', data); // Debug Connexion réussie
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('userId', data.user.id);
                 setSuccessMessage('Connexion réussie !');
+                console.log('Redirection vers la page de discussions...'); // Debug Redirection
                 navigate('/discussions');
             } else {
                 setErrorMessage('Identifiant ou mot de passe incorrect.');
+                console.log('Erreur: Identifiants incorrects'); // Debug Identifiants incorrects
                 passwordInputRef.current.focus();
             }
         } catch (error) {
+            console.error('Erreur lors de la connexion:', error); // Debug Erreur backend
             setErrorMessage('Une erreur est survenue, veuillez réessayer.');
         } finally {
             setIsLoading(false);
+            console.log('Fin de la tentative de connexion'); // Debug Fin
         }
     };
 
@@ -123,7 +137,7 @@ const Login = () => {
                 <div className="login-links">
                     <span>Mot de passe oublié ?&nbsp;</span>
                     <a href="/forgot-password" className="forgot-password-link">
-                       Modifier
+                        Modifier
                     </a>
                     <br/>
                     <span>Vous n'avez pas de compte ?&nbsp;</span>

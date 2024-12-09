@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import NotFound from "./components/common/router/notFound/NotFound";
 import PrivateRoute from "./components/common/router/privateRoute";
@@ -11,13 +11,27 @@ import Discussions from "./components/pages/discussions/Discussions";
 import Profile from "./components/pages/profile/Profile";
 import Articles from "./components/pages/articles/Articles";
 import ArticleDetail from "./components/pages/articleDetail/ArticleDetail";
-import CreateArticle from "./components/createArticle/CreateArticle";
+import CreateArticle from "./components/pages/createArticle/CreateArticle";
 import Settings from "./components/pages/settings/Settings";
 /* Layout */
 import Navbar from "./components/common/navbar/Navbar";
 
 const App = () => {
-    const isAuthenticated = !!localStorage.getItem('token'); // Vérifie l'authentification
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token')); // Utilisation de l'état
+
+    // Met à jour `isAuthenticated` lorsque les jetons sont modifiés
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsAuthenticated(!!localStorage.getItem('token'));
+        };
+
+        // Écoute les changements dans `localStorage`
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     return (
         <Router>
@@ -26,7 +40,7 @@ const App = () => {
                 <Route path="/" element={<Navigate to={isAuthenticated ? "/profile" : "/login"} />} />
 
                 {/* Routes publiques */}
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                 <Route path="/register" element={<Register />} />
 
                 {/* Routes privées */}
