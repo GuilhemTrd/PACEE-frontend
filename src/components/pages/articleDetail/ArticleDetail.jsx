@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './ArticleDetail.css';
 
 const ArticleDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [article, setArticle] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -25,6 +26,10 @@ const ArticleDetail = () => {
     useEffect(() => {
         fetchArticle();
     }, [fetchArticle]);
+
+    const handleGoBack = () => {
+        navigate('/articles'); // Redirection vers la liste des articles
+    };
 
     if (isLoading) {
         return (
@@ -48,10 +53,9 @@ const ArticleDetail = () => {
         );
     }
 
-    // Ajoutez la base URL devant les chemins relatifs des images
     const apiUrl = process.env.REACT_APP_API_URL;
     const contentWithFullImageUrls = article.content.replace(
-        /<img src="\/uploads\//g, // Remplace uniquement les chemins relatifs commençant par /uploads/
+        /<img src="\/uploads\//g,
         `<img src="${apiUrl}/uploads/`
     );
 
@@ -59,6 +63,9 @@ const ArticleDetail = () => {
         <div className="article-detail-container">
             <Navbar />
             <div className="article-detail-content">
+                <button className="go-back-button" onClick={handleGoBack}>
+                   ←  Tous les articles
+                </button>
                 <h1>{article.title}</h1>
                 <p className="article-detail-date">Publié le : {new Date(article.created_at).toLocaleDateString()}</p>
                 <div
