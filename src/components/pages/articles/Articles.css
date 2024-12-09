@@ -92,24 +92,23 @@
     position: fixed;
     bottom: 50px;
     right: 50px;
-    width: 60px;
-    height: 60px;
-    background-color: white;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    z-index: 10;
     color: #FF7B00;
-    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
+    border-radius: 50%;
     cursor: pointer;
-    z-index: 1000;
+    transition: transform 0.2s, background-color 0.2s;
+    text-decoration: none;
 }
 
 .floating-button:hover {
-    background-color: #ea7203;
-    transform: scale(1.1);
+    background-color: #FF7B00;
+    color: white;
 }
