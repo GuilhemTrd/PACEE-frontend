@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
 import './Discussions.css';
-import Navbar from '../navbar/Navbar';
-import userProfile from '../../assets/temp/userProfile.png';
-import likeIcon from '../../assets/icons/like.svg';
-import likeIconColor from '../../assets/icons/likeColor.svg';
-import Loader from '../loader/Loader';
-import apiClient from '../../utils/apiClient';
+import Navbar from '../../common/navbar/Navbar';
+import userProfile from '../../../assets/temp/userProfile.png';
+import likeIcon from '../../../assets/icons/like.svg';
+import likeIconColor from '../../../assets/icons/likeColor.svg';
+import Loader from '../../common/loader/Loader';
+import apiClient from '../../../utils/apiClient';
 
 const Discussions = () => {
     // ** Références **

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
-import Navbar from '../navbar/Navbar';
-import userProfilePlaceholder from '../../assets/temp/userProfile.png';
-import apiClient from '../../utils/apiClient';
-import Loader from "../loader/Loader";
+import Navbar from '../../common/navbar/Navbar';
+import userProfilePlaceholder from '../../../assets/temp/userProfile.png';
+import apiClient from '../../../utils/apiClient';
+import Loader from "../../common/loader/Loader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

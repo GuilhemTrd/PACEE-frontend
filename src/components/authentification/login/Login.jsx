@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import './Login.css';
-import logo from '../../assets/logo/logo-typographique.png';
-import background from '../../assets/images/LoginRegister_img.png';
-import mailIcon from '../../assets/icons/mail.svg';
-import eyeOpenIcon from '../../assets/icons/eye-open.svg';
-import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
-import apiClient from '../../utils/apiClient';
+import logo from '../../../assets/logo/logo-typographique.png';
+import background from '../../../assets/images/LoginRegister_img.png';
+import mailIcon from '../../../assets/icons/mail.svg';
+import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
+import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
+import apiClient from '../../../utils/apiClient';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {

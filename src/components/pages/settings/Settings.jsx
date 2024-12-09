@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../navbar/Navbar';
+import Navbar from '../../common/navbar/Navbar';
 import './Settings.css';
 
 const Settings = () => {

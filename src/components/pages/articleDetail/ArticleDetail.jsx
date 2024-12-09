@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../navbar/Navbar';
-import apiClient from '../../utils/apiClient';
+import Navbar from '../../common/navbar/Navbar';
+import apiClient from '../../../utils/apiClient';
 import './ArticleDetail.css';
 
 const ArticleDetail = () => {

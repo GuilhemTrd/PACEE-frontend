@@ -1,20 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import NotFound from "./components/router/notFound/NotFound";
-import PrivateRoute from "./components/router/privateRoute";
+import NotFound from "./components/common/router/notFound/NotFound";
+import PrivateRoute from "./components/common/router/privateRoute";
 import './App.css';
 /* Auth */
-import Login from './components/login/Login';
-import Register from "./components/register/Register";
+import Login from './components/authentification/login/Login';
+import Register from "./components/authentification/register/Register";
 /* Pages */
-import Discussions from "./components/discussions/Discussions";
-import Profile from "./components/profile/Profile";
-import Articles from "./components/articles/Articles";
-import ArticleDetail from "./components/articleDetail/ArticleDetail";
+import Discussions from "./components/pages/discussions/Discussions";
+import Profile from "./components/pages/profile/Profile";
+import Articles from "./components/pages/articles/Articles";
+import ArticleDetail from "./components/pages/articleDetail/ArticleDetail";
 import CreateArticle from "./components/createArticle/CreateArticle";
-import Settings from "./components/settings/Settings";
+import Settings from "./components/pages/settings/Settings";
 /* Layout */
-import Navbar from "./components/navbar/Navbar";
+import Navbar from "./components/common/navbar/Navbar";
 
 const App = () => {
     const isAuthenticated = !!localStorage.getItem('token'); // Vérifie l'authentification

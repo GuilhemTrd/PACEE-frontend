@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
-import logo from '../../assets/logo/logo-typographique.png';
-import userProfileDefault from '../../assets/temp/userProfile.png';
-import discussionIcon from '../../assets/icons/discussion.svg';
-import discussionIconColor from '../../assets/icons/discussionColor.svg';
-import articlesIcon from '../../assets/icons/article.svg';
-import articlesIconColor from '../../assets/icons/articleColor.svg';
-import settingsIcon from '../../assets/icons/settings.svg';
-import settingsIconColor from '../../assets/icons/settingsColor.svg';
+import logo from '../../../assets/logo/logo-typographique.png';
+import userProfileDefault from '../../../assets/temp/userProfile.png';
+import discussionIcon from '../../../assets/icons/discussion.svg';
+import discussionIconColor from '../../../assets/icons/discussionColor.svg';
+import articlesIcon from '../../../assets/icons/article.svg';
+import articlesIconColor from '../../../assets/icons/articleColor.svg';
+import settingsIcon from '../../../assets/icons/settings.svg';
+import settingsIconColor from '../../../assets/icons/settingsColor.svg';
 import Loader from "../loader/Loader";
-import apiClient from '../../utils/apiClient';
+import apiClient from '../../../utils/apiClient';
 
 const Navbar = () => {
     const location = useLocation();

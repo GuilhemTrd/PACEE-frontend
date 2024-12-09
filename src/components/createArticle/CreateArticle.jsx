@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../navbar/Navbar';
+import Navbar from '../common/navbar/Navbar';
 import { Editor } from '@tinymce/tinymce-react';
 import apiClient from '../../utils/apiClient';
 import './CreateArticle.css';

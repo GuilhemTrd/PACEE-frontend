@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './Register.css';
-import logo from '../../assets/logo/logo-typographique.png';
-import background from '../../assets/images/LoginRegister_img.png';
-import userIcon from '../../assets/icons/user.svg';
-import mailIcon from '../../assets/icons/mail.svg';
-import eyeOpenIcon from '../../assets/icons/eye-open.svg';
-import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
-import checkIcon from '../../assets/icons/check.svg';
-import crossIcon from '../../assets/icons/cross.svg';
+import logo from '../../../assets/logo/logo-typographique.png';
+import background from '../../../assets/images/LoginRegister_img.png';
+import userIcon from '../../../assets/icons/user.svg';
+import mailIcon from '../../../assets/icons/mail.svg';
+import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
+import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
+import checkIcon from '../../../assets/icons/check.svg';
+import crossIcon from '../../../assets/icons/cross.svg';
 
 const Register = () => {
     const [firstname, setFirstname] = useState('');
