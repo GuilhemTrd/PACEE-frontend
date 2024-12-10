@@ -7,6 +7,7 @@ import apiClient from '../../../utils/apiClient';
 import Loader from "../../common/loader/Loader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import userProfileDefault from "../../../assets/temp/userProfile.png";
 
 const Profile = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -45,7 +46,12 @@ const Profile = () => {
             const data = response.data;
 
             setUserInfo(data);
-            setPathProfilePicture(`${process.env.REACT_APP_API_URL}${data.image_profile}`);
+            if (!data.image_profile) {
+                setPathProfilePicture(userProfileDefault);
+            } else {
+                setPathProfilePicture(`${process.env.REACT_APP_API_URL}${data.image_profile}`);
+            }
+
         } catch (error) {
             console.error('Erreur lors de la récupération des informations utilisateur:', error);
             setError('Impossible de récupérer les informations utilisateur.');
