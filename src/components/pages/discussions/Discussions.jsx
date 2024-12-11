@@ -6,6 +6,8 @@ import likeIcon from '../../../assets/icons/like.svg';
 import likeIconColor from '../../../assets/icons/likeColor.svg';
 import Loader from '../../common/loader/Loader';
 import apiClient from '../../../utils/apiClient';
+import 'react-toastify/dist/ReactToastify.css';
+import {ToastContainer, toast} from 'react-toastify';
 
 const Discussions = () => {
     // ** Références **
@@ -19,7 +21,7 @@ const Discussions = () => {
     const [expandeddiscussions, setExpandeddiscussions] = useState({});
     const [isLastPage, setIsLastPage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [filter, setFilter] = useState('recent'); // Par défaut, tri par 'recent'
+    const [filter, setFilter] = useState('recent');
 
     // ** États pour les commentaires **
     const [comments, setComments] = useState({});
@@ -128,10 +130,32 @@ const Discussions = () => {
             }
         }, 0);
     };
-    const handleAdddiscussion = async () => {
+    const handleAddDiscussion = async () => {
         try {
+            const hasFirstDiscussionBadge = await apiClient.get(`/api/user_badges?user.id=${userId}&badge.name=Première discussion`);
             const nowAddDiscussion = new Date();
             nowAddDiscussion.setMinutes(nowAddDiscussion.getMinutes() - nowAddDiscussion.getTimezoneOffset());
+            const firstDiscussionBadge = await apiClient.get('/api/badges?name=Première discussion');
+            const firstDiscussionBadgeId = firstDiscussionBadge.data['member'][0].id;
+            if (hasFirstDiscussionBadge.data['member'].length === 0) {
+                console.log('Badge non trouvé');
+                await apiClient.post('/api/user_badges', {
+                    user: `/api/users/${userId}`,
+                    badge: `/api/badges/${firstDiscussionBadgeId}`,
+                    awarded_at: nowAddDiscussion,
+                    status: true,
+                });
+
+                const storedOpenedBadges = JSON.parse(localStorage.getItem('openedBadges')) || {};
+                storedOpenedBadges[firstDiscussionBadgeId] = false; // Marquer le badge comme non ouvert
+                localStorage.setItem('openedBadges', JSON.stringify(storedOpenedBadges));
+
+                toast.success(
+                    "Félicitations ! Vous avez débloqué le badge 'Première discussion'. Cliquez ici pour voir tous vos badges.",
+                    { onClick: () => window.location.href = '/profile' }
+                );
+            }
+
             const response = await apiClient.post('/api/discussions', {
                 content: newdiscussionMessage,
                 user: `/api/users/${userId}`,
@@ -142,13 +166,15 @@ const Discussions = () => {
 
             const newDiscussion = response.data;
 
+            // Mettre à jour les discussions localement
             setDiscussions([newDiscussion, ...discussions]);
             setNewdiscussionMessage('');
             setIsPopupOpen(false);
         } catch (error) {
-            console.error('Erreur lors de l\'ajout de la discussions:', error);
+            console.error("Erreur lors de l'ajout de la discussion ou de l'attribution du badge :", error);
         }
     };
+
 
     // ** Fonctions pour les commentaires **
     const fetchComments = async (discussionId, commentUrls) => {
@@ -333,6 +359,7 @@ const Discussions = () => {
     return (
         <div className="actualite-container">
             <Navbar />
+            <ToastContainer/>
             <div className="discussion-content-container">
                 <h1>Fil d’actualité</h1>
                 <div className="filter-buttons">
@@ -369,7 +396,7 @@ const Discussions = () => {
                             className="new-discussion-textarea"
                         />
                             <div className="new-discussion-actions">
-                                <button onClick={handleAdddiscussion} className="submit-button">Publier</button>
+                                <button onClick={handleAddDiscussion} className="submit-button">Publier</button>
                                 <button onClick={() => setIsPopupOpen(false)} className="cancel-button">Annuler</button>
                             </div>
                         </div>

@@ -16,6 +16,11 @@ const Profile = () => {
     const [selectedBadge, setSelectedBadge] = useState(null);
     const modalRef = useRef(null);
     const [pathProfilePicture, setPathProfilePicture] = useState(null);
+    const [openedBadges, setOpenedBadges] = useState(() => {
+        const storedBadges = localStorage.getItem('openedBadges');
+        return storedBadges ? JSON.parse(storedBadges) : {};
+    });
+
 
     const formatTime = (isoString) => {
         if (!isoString) return '-';
@@ -134,7 +139,18 @@ const Profile = () => {
             ...badge,
             awarded_at: formatDate(badge.awarded_at),
         });
+
+        setOpenedBadges((prev) => {
+            const updatedBadges = {
+                ...prev,
+                [badge.badge.id]: true,
+            };
+            localStorage.setItem('openedBadges', JSON.stringify(updatedBadges));
+            return updatedBadges;
+        });
     };
+
+
 
     const closeBadgeModal = () => {
         setSelectedBadge(null);
@@ -184,15 +200,14 @@ const Profile = () => {
                         <div className="badges-container">
                             {userInfo.userBadges && userInfo.userBadges.length > 0 ? (
                                 userInfo.userBadges.map((userBadge, index) => (
-                                    <div
-                                        className="badge-item"
-                                        key={index}
-                                        onClick={() => openBadgeModal(userBadge)}
-                                    >
+                                    <div className="badge-item" key={index} onClick={() => openBadgeModal(userBadge)}>
                                         <div
                                             className="badge-icon"
                                             dangerouslySetInnerHTML={{__html: userBadge.badge.svg}}
                                         ></div>
+                                        {!openedBadges[userBadge.badge.id] && (
+                                            <div className="badge-notification"></div>
+                                        )}
                                     </div>
                                 ))
                             ) : (
