@@ -16,7 +16,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: 100vh; /* Limiter la hauteur */
+    height: 100vh;
 }
 
 .login-container .background-image {
