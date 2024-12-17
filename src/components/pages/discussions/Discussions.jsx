@@ -29,6 +29,7 @@ const Discussions = () => {
     const [visibleComments, setVisibleComments] = useState({});
     const [newCommentContent, setNewCommentContent] = useState({});
     const [isLoadingComments, setIsLoadingComments] = useState({});
+    const [replyInputVisible, setReplyInputVisible] = useState({});
 
     // ** États pour la création/modification des discussions **
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -213,7 +214,6 @@ const Discussions = () => {
         }
     };
 
-
     const toggleShowComments = (discussionId, commentIds) => {
         setShowComments((prevShowComments) => {
             if (prevShowComments[discussionId]) {
@@ -227,6 +227,13 @@ const Discussions = () => {
                 return { [discussionId]: true };
             }
         });
+    };
+
+    const handleReplyClick = (discussionId) => {
+        setReplyInputVisible((prev) => ({
+            ...prev,
+            [discussionId]: !prev[discussionId],
+        }));
     };
 
     const loadMoreComments = (id) => {
@@ -287,6 +294,11 @@ const Discussions = () => {
                 )
             );
 
+            setReplyInputVisible((prev) => ({
+                ...prev,
+                [discussionId]: false,
+            }));
+
             setNewCommentContent({ ...newCommentContent, [discussionId]: '' });
 
         } catch (error) {
@@ -322,7 +334,7 @@ const Discussions = () => {
                 updatedLikeCount = 1;
 
                 setFlyLikeId(id);
-                setTimeout(() => setFlyLikeId(null), 800); // Réinitialise après 0.8 seconde
+                setTimeout(() => setFlyLikeId(null), 800);
             }
 
             setDiscussions(prevDiscussions =>
@@ -445,6 +457,30 @@ const Discussions = () => {
                                 </div>
                                 {showComments[discussion.id] && (
                                     <div className="comments-section">
+                                        <button onClick={() => handleReplyClick(discussion.id)} className="reply-button">
+                                            {replyInputVisible[discussion.id] ? 'Annuler' : 'Répondre'}
+                                        </button>
+                                        {replyInputVisible[discussion.id] && (
+                                            <div className="add-comment-section">
+                                                <input
+                                                    type="text"
+                                                    id={`comment-input-${discussion.id}`}
+                                                    value={newCommentContent[discussion.id] || ''}
+                                                    onChange={(e) => handleCommentInputChange(discussion.id, e.target.value)}
+                                                    placeholder="Ajouter un commentaire..."
+                                                    className="comment-input"
+                                                    maxLength="200"
+                                                />
+                                                <div id={`character-counter-${discussion.id}`}
+                                                     className="character-counter">
+                                                    {newCommentContent[discussion.id]?.length || 0} / 200
+                                                </div>
+                                                <button onClick={() => handleAddComment(discussion.id)}
+                                                        className="comment-button">
+                                                    Commenter
+                                                </button>
+                                            </div>
+                                        )}
                                         {isLoadingComments[discussion.id] ? (
                                             <Loader isCommentLoader={true}/>
                                         ) : (
@@ -465,25 +501,6 @@ const Discussions = () => {
                                                 Charger plus
                                             </div>
                                         )}
-                                        <div className="add-comment-section">
-                                            <input
-                                                type="text"
-                                                id={`comment-input-${discussion.id}`}
-                                                value={newCommentContent[discussion.id] || ''}
-                                                onChange={(e) => handleCommentInputChange(discussion.id, e.target.value)}
-                                                placeholder="Ajouter un commentaire..."
-                                                className="comment-input"
-                                                maxLength="200"
-                                            />
-                                            <div id={`character-counter-${discussion.id}`}
-                                                 className="character-counter">
-                                                {newCommentContent[discussion.id]?.length || 0} / 200
-                                            </div>
-                                            <button onClick={() => handleAddComment(discussion.id)}
-                                                    className="comment-button">
-                                                Commenter
-                                            </button>
-                                        </div>
 
                                     </div>
                                 )}
