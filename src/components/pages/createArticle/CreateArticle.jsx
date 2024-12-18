@@ -127,26 +127,29 @@ const CreateArticle = () => {
                         value={content}
                         init={{
                             height: 400,
-                            menubar: true,
+                            width: '100%',
                             plugins: [
                                 'advlist autolink lists link image charmap print preview anchor',
                                 'searchreplace visualblocks code fullscreen',
                                 'insertdatetime media table paste code help wordcount image',
+                                'table' // Active le plugin table
                             ],
                             toolbar: [
-                                'undo redo | formatselect | bold italic backcolor',
-                                'alignleft aligncenter alignright alignjustify',
-                                'bullist numlist outdent indent | removeformat | image | help',
-                            ].join(' | '),
+                                'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
+                            ].join(' | '), // Pas de boutons de tableau ici
+                            menu: {
+                                table: { title: 'Tableau', items: 'inserttable tableprops deletetable | cell row column' }
+                            },
+                            menubar: 'file edit insert view format table tools help', // Ajout du menu Table
                             images_upload_handler: async (blobInfo, success, failure) => {
                                 const formData = new FormData();
-                                formData.append('file', blobInfo.blob(), blobInfo.filename()); // Récupération de l'image sous forme de blob
+                                formData.append('file', blobInfo.blob(), blobInfo.filename());
 
                                 try {
                                     const response = await apiClient.post('/api/articles/upload-image', formData, {
                                         headers: { 'Content-Type': 'multipart/form-data' },
                                     });
-                                    success(response.data.url); // TinyMCE insère cette URL dans le contenu
+                                    success(response.data.url);
                                 } catch (err) {
                                     console.error('Erreur lors de l\'upload de l\'image:', err);
                                     failure('Erreur lors de l\'upload de l\'image.');
@@ -155,7 +158,6 @@ const CreateArticle = () => {
                         }}
                         onEditorChange={(newContent) => setContent(newContent)}
                     />
-
 
                     <button type="submit" className="submit-button">
                         Publier l'article
