@@ -22,6 +22,7 @@ const CreateArticle = () => {
 
     const uploadImages = async (imageUrls) => {
         const uploadedUrls = [];
+        console.log('Uploading images:', imageUrls);
 
         for (const imageUrl of imageUrls) {
             if (imageUrl.startsWith('data:') || imageUrl.startsWith('blob:')) {
@@ -74,7 +75,7 @@ const CreateArticle = () => {
         };
 
         try {
-            const response = await apiClient.post('/api/articles', requestBody);
+            await apiClient.post('/api/articles', requestBody);
             setSuccess(true);
 
             setTitle('');
