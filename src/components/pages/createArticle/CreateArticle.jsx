@@ -14,7 +14,6 @@ const CreateArticle = () => {
     const [success, setSuccess] = useState(false);
 
     const extractImageUrls = (content) => {
-        console.log('Extracting image URLs from content:', content);
         const div = document.createElement('div');
         div.innerHTML = content;
         const images = div.querySelectorAll('img');
@@ -23,7 +22,6 @@ const CreateArticle = () => {
 
     const uploadImages = async (imageUrls) => {
         const uploadedUrls = [];
-        console.log('Uploading images:', imageUrls);
 
         for (const imageUrl of imageUrls) {
             if (imageUrl.startsWith('data:') || imageUrl.startsWith('blob:')) {
@@ -36,7 +34,6 @@ const CreateArticle = () => {
                         headers: { 'Content-Type': 'multipart/form-data' },
                     });
                     uploadedUrls.push(response.data.url);
-                    console.log('Image uploadée:', response.data.url);
                 } catch (err) {
                     console.error('Erreur lors de l\'upload de l\'image:', err);
                 }
@@ -76,11 +73,8 @@ const CreateArticle = () => {
             updated_at: new Date().toISOString(),
         };
 
-        console.log('Request Body:', requestBody);
-
         try {
             const response = await apiClient.post('/api/articles', requestBody);
-            console.log('Article créé:', response.data);
             setSuccess(true);
 
             setTitle('');

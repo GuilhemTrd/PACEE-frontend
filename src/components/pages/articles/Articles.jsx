@@ -19,10 +19,8 @@ const Articles = () => {
 
     const fetchArticles = async (page = 1, query = '') => {
         const cacheKey = `page-${page}-search-${query}`;
-        console.log(`Tentative de récupération des articles : page=${page}, query="${query}"`);
 
         if (cacheRef.current[cacheKey]) {
-            console.log(`Données en cache trouvées pour : ${cacheKey}`);
             const cachedData = cacheRef.current[cacheKey];
             setArticles((prevArticles) => {
                 const articleIds = new Set(prevArticles.map((article) => article.id));
@@ -37,13 +35,10 @@ const Articles = () => {
 
         setIsLoading(true);
         try {
-            console.log(`Appel API pour les articles : page=${page}, query="${query}"`);
             const response = await apiClient.get(
                 `/api/articles?page=${page}&itemsPerPage=10${query ? `&title=${query}` : ''}`
             );
-            console.log('Réponse de l\'API :', response.data);
             const articlesData = response.data.member || [];
-            console.log('Données des articles :', articlesData);
             cacheRef.current[cacheKey] = articlesData;
 
             setArticles((prevArticles) => {
@@ -64,7 +59,6 @@ const Articles = () => {
     };
 
     useEffect(() => {
-        console.log('Chargement initial des articles...');
         fetchArticles(1);
     }, []);
 
@@ -72,20 +66,17 @@ const Articles = () => {
         if (isLoadingMore || isLastPage || isSearching) return;
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
-        console.log(`Chargement de la page suivante : ${nextPage}`);
         fetchArticles(nextPage, searchTerm);
     };
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
-        console.log(`Recherche mise à jour : "${value}"`);
         setSearchTerm(value);
         setIsSearching(true);
         fetchArticles(1, value);
     };
 
     if (isLoading && !isSearching) {
-        console.log('Affichage de l\'écran de chargement initial');
         return (
             <div className="articles-container">
                 <Navbar />
@@ -98,7 +89,6 @@ const Articles = () => {
     }
 
     if (error) {
-        console.log('Affichage de l\'écran d\'erreur');
         return (
             <div className="articles-container">
                 <Navbar />
@@ -129,7 +119,6 @@ const Articles = () => {
                 <div className="articles-grid">
                     {articles.length > 0 ? (
                         articles.map((article) => {
-                            console.log('Article rendu :', article);
                             return (
                                 <Link
                                     to={`/articles/${article.id || article['@id']}`}
