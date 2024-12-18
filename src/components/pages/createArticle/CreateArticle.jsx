@@ -132,15 +132,15 @@ const CreateArticle = () => {
                                 'advlist autolink lists link image charmap print preview anchor',
                                 'searchreplace visualblocks code fullscreen',
                                 'insertdatetime media table paste code help wordcount image',
-                                'table' // Active le plugin table
+                                'table'
                             ],
                             toolbar: [
                                 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
-                            ].join(' | '), // Pas de boutons de tableau ici
+                            ].join(' | '),
                             menu: {
                                 table: { title: 'Tableau', items: 'inserttable tableprops deletetable | cell row column' }
                             },
-                            menubar: 'file edit insert view format table tools help', // Ajout du menu Table
+                            menubar: 'file edit insert view format table tools help',
                             images_upload_handler: async (blobInfo, success, failure) => {
                                 const formData = new FormData();
                                 formData.append('file', blobInfo.blob(), blobInfo.filename());
