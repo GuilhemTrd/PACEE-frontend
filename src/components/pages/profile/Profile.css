@@ -164,18 +164,6 @@ body {
     margin: 0 auto;
 }
 
-.badge-notification {
-    position: absolute;
-    top: -2px;
-    right: -8px;
-    width: 12px;
-    height: 12px;
-    background-color: #FF7B00;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    border: 2px solid #fff;
-}
-
 .badge-icon {
     width: 80px;
     height: 80px;

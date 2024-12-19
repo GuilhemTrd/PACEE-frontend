@@ -16,10 +16,6 @@ const Profile = () => {
     const [selectedBadge, setSelectedBadge] = useState(null);
     const modalRef = useRef(null);
     const [pathProfilePicture, setPathProfilePicture] = useState(null);
-    const [openedBadges, setOpenedBadges] = useState(() => {
-        const storedBadges = localStorage.getItem('openedBadges');
-        return storedBadges ? JSON.parse(storedBadges) : {};
-    });
 
 
     const formatTime = (isoString) => {
@@ -140,17 +136,7 @@ const Profile = () => {
             awarded_at: formatDate(badge.awarded_at),
         });
 
-        setOpenedBadges((prev) => {
-            const updatedBadges = {
-                ...prev,
-                [badge.badge.id]: true,
-            };
-            localStorage.setItem('openedBadges', JSON.stringify(updatedBadges));
-            return updatedBadges;
-        });
     };
-
-
 
     const closeBadgeModal = () => {
         setSelectedBadge(null);
@@ -205,9 +191,6 @@ const Profile = () => {
                                             className="badge-icon"
                                             dangerouslySetInnerHTML={{__html: userBadge.badge.svg}}
                                         ></div>
-                                        {!openedBadges[userBadge.badge.id] && (
-                                            <div className="badge-notification"></div>
-                                        )}
                                     </div>
                                 ))
                             ) : (
