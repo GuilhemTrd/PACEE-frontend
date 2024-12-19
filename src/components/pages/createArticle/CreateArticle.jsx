@@ -93,11 +93,9 @@ const CreateArticle = () => {
         <div className="create-article-container">
             <Navbar />
             <div className="create-article-content">
-                <h1>Créer un Nouvel Article</h1>
                 {success && <p className="success-message">Article créé avec succès !</p>}
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSubmit} className="create-article-form">
-                    <label htmlFor="title">Titre de l'article :</label>
                     <input
                         type="text"
                         id="title"
@@ -106,8 +104,6 @@ const CreateArticle = () => {
                         placeholder="Entrez le titre"
                         required
                     />
-
-                    <label htmlFor="description">Description :</label>
                     <textarea
                         id="description"
                         value={description}
@@ -115,8 +111,6 @@ const CreateArticle = () => {
                         placeholder="Entrez une brève description"
                         required
                     ></textarea>
-
-                    <label htmlFor="content">Contenu de l'article :</label>
                     <Editor
                         apiKey="6cqpnv6i2qqe2tm1hfcsxjusxefid5bvk7vyy3pnfd3uooej"
                         value={content}
