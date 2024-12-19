@@ -147,10 +147,6 @@ const Discussions = () => {
                     status: true,
                 });
 
-                const storedOpenedBadges = JSON.parse(localStorage.getItem('openedBadges')) || {};
-                storedOpenedBadges[firstDiscussionBadgeId] = false; // Marquer le badge comme non ouvert
-                localStorage.setItem('openedBadges', JSON.stringify(storedOpenedBadges));
-
                 toast.success(
                     "Félicitations ! Vous avez débloqué le badge 'Première discussion'. Cliquez ici pour voir tous vos badges.",
                     { onClick: () => window.location.href = '/profile' }
