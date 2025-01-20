@@ -65,8 +65,8 @@
     margin: 10px 0;
 }
 .go-back-button {
-    background-color: #ff7b00;
-    color: white;
+    background-color: transparent;
+    color: #ff7b00;
     border: none;
     border-radius: 5px;
     padding: 6px 12px;
@@ -78,11 +78,26 @@
 }
 
 .go-back-button:hover {
-    background-color: #e06b00;
     transform: scale(1.05);
 }
 
 .go-back-button:active {
-    background-color: #d95a00;
     transform: scale(0.95);
+}
+
+.edit-article-button {
+    background-color: #ff7b00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 2%;
+}
+
+.edit-article-button:hover {
+    background-color: #e06b00;
 }

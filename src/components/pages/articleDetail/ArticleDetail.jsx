@@ -64,7 +64,13 @@ const ArticleDetail = () => {
             <Navbar />
             <div className="article-detail-content">
                 <button className="go-back-button" onClick={handleGoBack}>
-                   ←  Tous les articles
+                    ← Tous les articles
+                </button>
+                <button
+                    onClick={() => navigate(`/articles/edit/${article.id}`)}
+                    className="edit-article-button"
+                >
+                    Modifier l'article
                 </button>
                 <h1>{article.title}</h1>
                 <p className="article-detail-date">Publié le : {new Date(article.created_at).toLocaleDateString()}</p>

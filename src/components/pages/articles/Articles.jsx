@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import './Articles.css';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {Bounce, toast, ToastContainer} from 'react-toastify';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
+import './Articles.css';
 
 const Articles = () => {
     const [articles, setArticles] = useState([]);
@@ -13,13 +14,39 @@ const Articles = () => {
     const [isLastPage, setIsLastPage] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isSearching, setIsSearching] = useState(false);
+    const [toastMessage, setToastMessage] = useState(null);
 
-    // Cache pour éviter de recharger les mêmes données
     const cacheRef = useRef({});
+    const location = useLocation();
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        if (toastMessage) {
+            toast.success(toastMessage, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+
+            const timer = setTimeout(() => {
+                setToastMessage(null);
+            }, 3100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [toastMessage]);
+
+
+
+
+    // Récupérer les articles
     const fetchArticles = async (page = 1, query = '') => {
         const cacheKey = `page-${page}-search-${query}`;
 
+        // Vérifie le cache
         if (cacheRef.current[cacheKey]) {
             const cachedData = cacheRef.current[cacheKey];
             setArticles((prevArticles) => {
@@ -33,7 +60,9 @@ const Articles = () => {
             return;
         }
 
-        setIsLoading(true);
+        setIsLoading(page === 1);
+        setIsLoadingMore(page > 1);
+
         try {
             const response = await apiClient.get(
                 `/api/articles?page=${page}&itemsPerPage=10${query ? `&title=${query}` : ''}`
@@ -50,7 +79,7 @@ const Articles = () => {
             setIsLastPage(articlesData.length < 10);
         } catch (err) {
             console.error('Erreur lors de la récupération des articles:', err);
-            setError("Impossible de charger les articles pour le moment.");
+            setError('Impossible de charger les articles pour le moment.');
         } finally {
             setIsLoading(false);
             setIsLoadingMore(false);
@@ -58,10 +87,12 @@ const Articles = () => {
         }
     };
 
+    // Initialiser les articles
     useEffect(() => {
         fetchArticles(1);
     }, []);
 
+    // Charger plus d'articles
     const loadMoreArticles = () => {
         if (isLoadingMore || isLastPage || isSearching) return;
         const nextPage = currentPage + 1;
@@ -69,6 +100,7 @@ const Articles = () => {
         fetchArticles(nextPage, searchTerm);
     };
 
+    // Gestion de la recherche
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
@@ -76,6 +108,7 @@ const Articles = () => {
         fetchArticles(1, value);
     };
 
+    // Gestion des états
     if (isLoading && !isSearching) {
         return (
             <div className="articles-container">
@@ -103,8 +136,29 @@ const Articles = () => {
     return (
         <div className="articles-container">
             <Navbar />
+            <ToastContainer
+                autoClose={3000}
+                hideProgressBar={true}
+                position="top-right"
+                closeOnClick
+                draggable
+                pauseOnHover
+            />
+
             <div className="articles-content">
                 <h1>Nos Articles</h1>
+                <button onClick={() => toast.success('test toast', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                })}
+                >Tester Toast</button>
 
                 {/* Barre de recherche */}
                 <div className="search-bar">
@@ -116,29 +170,32 @@ const Articles = () => {
                         className="search-input"
                     />
                 </div>
+
+                {/* Liste des articles */}
                 <div className="articles-grid">
                     {articles.length > 0 ? (
-                        articles.map((article) => {
-                            return (
-                                <Link
-                                    to={`/articles/${article.id || article['@id']}`}
-                                    key={article.id || article['@id']}
-                                    className="article-card"
-                                >
-                                    <span className="article-tag">CONSEILS</span>
-                                    <h2 className="article-title">{article.title || 'Titre manquant'}</h2>
-                                    <p className="article-excerpt">{article.description || 'Description manquante'}</p>
-                                </Link>
-                            );
-                        })
+                        articles.map((article) => (
+                            <Link
+                                to={`/articles/${article.id || article['@id']}`}
+                                key={article.id || article['@id']}
+                                className="article-card"
+                            >
+                                <span className="article-tag">CONSEILS</span>
+                                <h2 className="article-title">{article.title || 'Titre manquant'}</h2>
+                                <p className="article-excerpt">{article.description || 'Description manquante'}</p>
+                            </Link>
+                        ))
                     ) : (
                         <p className="no-articles-message">Aucun article trouvé.</p>
                     )}
                 </div>
-                {/* Bouton flottant pour ajouter un article */}
+
+                {/* Bouton flotant pour ajouter un article */}
                 <Link to="/create-article" className="floating-button">
                     +
                 </Link>
+
+                {/* Bouton Charger plus */}
                 {!isSearching && (
                     <div className="load-more-container">
                         {isLoadingMore ? (
