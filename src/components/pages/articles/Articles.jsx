@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {Bounce, toast, ToastContainer} from 'react-toastify';
+import {Link} from 'react-router-dom';
+import {toast, ToastContainer} from 'react-toastify';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './Articles.css';
@@ -17,8 +17,6 @@ const Articles = () => {
     const [toastMessage, setToastMessage] = useState(null);
 
     const cacheRef = useRef({});
-    const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (toastMessage) {
@@ -147,19 +145,6 @@ const Articles = () => {
 
             <div className="articles-content">
                 <h1>Nos Articles</h1>
-                <button onClick={() => toast.success('test toast', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                })}
-                >Tester Toast</button>
-
                 {/* Barre de recherche */}
                 <div className="search-bar">
                     <input

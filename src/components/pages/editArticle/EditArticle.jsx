@@ -52,7 +52,7 @@ const EditArticle = () => {
 
         try {
             await apiClient.put(`/api/articles/${id}`, requestBody);
-            navigate('/articles', { state: { toastMessage: "Article mis à jour avec succès !" } });
+            navigate('/articles');
         } catch (err) {
             console.error("Erreur lors de la mise à jour de l'article :", err);
             toast.error("Mise à jour échouée. Veuillez réessayer.", { position: "top-right" });
