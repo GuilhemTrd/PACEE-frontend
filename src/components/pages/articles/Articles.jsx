@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Link} from 'react-router-dom';
-import {toast, ToastContainer} from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './Articles.css';
@@ -37,25 +37,14 @@ const Articles = () => {
         }
     }, [toastMessage]);
 
-
-
-
     // Récupérer les articles
     const fetchArticles = async (page = 1, query = '') => {
         const cacheKey = `page-${page}-search-${query}`;
 
-        // Vérifie le cache
-        if (cacheRef.current[cacheKey]) {
-            const cachedData = cacheRef.current[cacheKey];
-            setArticles((prevArticles) => {
-                const articleIds = new Set(prevArticles.map((article) => article.id));
-                const newItems = cachedData.filter((item) => !articleIds.has(item.id));
-                return query ? cachedData : [...prevArticles, ...newItems];
-            });
-            setIsLastPage(cachedData.length < 10);
-            setIsLoading(false);
-            setIsLoadingMore(false);
-            return;
+        // Réinitialiser les articles et `isLastPage` uniquement pour la première page
+        if (page === 1) {
+            setArticles([]);
+            setIsLastPage(false);
         }
 
         setIsLoading(page === 1);
@@ -71,7 +60,7 @@ const Articles = () => {
             setArticles((prevArticles) => {
                 const articleIds = new Set(prevArticles.map((article) => article.id));
                 const newItems = articlesData.filter((item) => !articleIds.has(item.id));
-                return query ? articlesData : [...prevArticles, ...newItems];
+                return page === 1 ? articlesData : [...prevArticles, ...newItems];
             });
 
             setIsLastPage(articlesData.length < 10);
@@ -93,16 +82,21 @@ const Articles = () => {
     // Charger plus d'articles
     const loadMoreArticles = () => {
         if (isLoadingMore || isLastPage || isSearching) return;
+
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+
         fetchArticles(nextPage, searchTerm);
     };
 
     // Gestion de la recherche
     const handleSearchChange = (e) => {
         const value = e.target.value;
+
         setSearchTerm(value);
+        setCurrentPage(1);
         setIsSearching(true);
+
         fetchArticles(1, value);
     };
 
@@ -170,8 +164,10 @@ const Articles = () => {
                                 <p className="article-excerpt">{article.description || 'Description manquante'}</p>
                             </Link>
                         ))
+                    ) : searchTerm.trim() ? (
+                        <p className="no-articles-message">Aucun article trouvé en fonction de vos filtres.</p>
                     ) : (
-                        <p className="no-articles-message">Aucun article trouvé.</p>
+                        <p className="no-articles-message">Aucun article écrit pour le moment, revenez plus tard.</p>
                     )}
                 </div>
 
@@ -181,12 +177,10 @@ const Articles = () => {
                 </Link>
 
                 {/* Bouton Charger plus */}
-                {!isSearching && (
+                {!isSearching && articles.length > 0 && !isLastPage && (
                     <div className="load-more-container">
                         {isLoadingMore ? (
                             <p>Chargement...</p>
-                        ) : isLastPage ? (
-                            <p className="no-more-articles-message">Tous les articles ont été chargés.</p>
                         ) : (
                             <button onClick={loadMoreArticles} className="load-more-button">
                                 Voir plus
