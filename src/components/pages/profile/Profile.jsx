@@ -16,10 +16,25 @@ const Profile = () => {
     const [selectedBadge, setSelectedBadge] = useState(null);
     const modalRef = useRef(null);
     const [pathProfilePicture, setPathProfilePicture] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [updatedUserInfo, setUpdatedUserInfo] = useState({
+        username: '',
+        email: '',
+        palmares: '',
+        time_5k: '',
+        time_10k: '',
+        time_semi: '',
+        time_marathon: ''
+    });
+    const [formErrors, setFormErrors] = useState({});
 
+    const isValidTimeFormat = (time) => {
+        const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])$/;
+        return timeRegex.test(time);
+    };
 
     const formatTime = (isoString) => {
-        if (!isoString) return '-';
+        if (!isoString) return '';
         const date = new Date(isoString);
         const hours = String(date.getUTCHours()).padStart(2, '0');
         const minutes = String(date.getUTCMinutes()).padStart(2, '0');
@@ -125,7 +140,6 @@ const Profile = () => {
 
         input.click();
     };
-
     const logout = () => {
         window.location.href = '/login';
     };
@@ -135,7 +149,6 @@ const Profile = () => {
             ...badge,
             awarded_at: formatDate(badge.awarded_at),
         });
-
     };
 
     const closeBadgeModal = () => {
@@ -145,6 +158,77 @@ const Profile = () => {
     const handleOutsideClick = (event) => {
         if (modalRef.current && !modalRef.current.contains(event.target)) {
             closeBadgeModal();
+        }
+    };
+
+    const handleEditModalOpen = () => {
+        setUpdatedUserInfo({
+            username: userInfo.username || '',
+            email: userInfo.email || '',
+            palmares: userInfo.palmares || '',
+            time_5k: userInfo.time_5k ? formatTime(userInfo.time_5k) : '',
+            time_10k: userInfo.time_10k ? formatTime(userInfo.time_10k) : '',
+            time_semi: userInfo.time_semi ? formatTime(userInfo.time_semi) : '',
+            time_marathon: userInfo.time_marathon ? formatTime(userInfo.time_marathon) : ''
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleEditModalClose = () => {
+        setIsEditModalOpen(false);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUpdatedUserInfo((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!isValidTimeFormat(updatedUserInfo.time_5k)) {
+            errors.time_5k = "Le format doit être HH:MM:SS.";
+        }
+        if (!isValidTimeFormat(updatedUserInfo.time_10k)) {
+            errors.time_10k = "Le format doit être HH:MM:SS.";
+        }
+        if (!isValidTimeFormat(updatedUserInfo.time_semi)) {
+            errors.time_semi = "Le format doit être HH:MM:SS.";
+        }
+        if (!isValidTimeFormat(updatedUserInfo.time_marathon)) {
+            errors.time_marathon = "Le format doit être HH:MM:SS.";
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const handleProfileUpdate = async () => {
+        if (!validateForm()) {
+            toast.error("Veuillez corriger les erreurs dans le formulaire.");
+            return;
+        }
+
+        const updatedData = {
+            ...updatedUserInfo,
+            time_5k: updatedUserInfo.time_5k ? `1970-01-01T${updatedUserInfo.time_5k}Z` : null,
+            time_10k: updatedUserInfo.time_10k ? `1970-01-01T${updatedUserInfo.time_10k}Z` : null,
+            time_semi: updatedUserInfo.time_semi ? `1970-01-01T${updatedUserInfo.time_semi}Z` : null,
+            time_marathon: updatedUserInfo.time_marathon ? `1970-01-01T${updatedUserInfo.time_marathon}Z` : null,
+        };
+
+        try {
+            const response = await apiClient.put(`/api/users/${localStorage.getItem('userId')}`, updatedData);
+            if (response.status === 200) {
+                setUserInfo((prev) => ({ ...prev, ...updatedUserInfo }));
+                toast.success("Profil mis à jour avec succès !");
+                setIsEditModalOpen(false);
+            } else {
+                throw new Error("Mise à jour non réussie.");
+            }
+        } catch (err) {
+            console.error("Erreur lors de la mise à jour du profil :", err);
+            toast.error("Une erreur s'est produite lors de la mise à jour du profil.");
         }
     };
 
@@ -222,11 +306,16 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Boutons d'action */}
                 <div className="profile-buttons-container">
-                    <button className="profile-btn edit-btn">Modifier le profil</button>
-                    <Link to="/MyPaces" className="profile-btn paceCalculate-btn">Calculer mes allures</Link>
-                    <Link to="/Login" onClick={logout} className="profile-btn logout-btn">Déconnexion</Link>
+                    <button className="profile-btn edit-btn" onClick={handleEditModalOpen}>
+                        Modifier le profil
+                    </button>
+                    <Link to="/MyPaces" className="profile-btn paceCalculate-btn">
+                        Calculer mes allures
+                    </Link>
+                    <Link to="/Login" onClick={logout} className="profile-btn logout-btn">
+                        Déconnexion
+                    </Link>
                 </div>
             </div>
 
@@ -247,6 +336,91 @@ const Profile = () => {
                     </div>
                 </div>
             )}
+            {isEditModalOpen && (
+                <div className="modal-overlay" onClick={handleEditModalClose}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-form">
+                            <label>
+                                Nom d'utilisateur :
+                                <input
+                                    type="text"
+                                    name="username"
+                                    value={updatedUserInfo.username}
+                                    onChange={handleInputChange}
+                                />
+                            </label>
+                            <label>
+                                Email :
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={updatedUserInfo.email}
+                                    onChange={handleInputChange}
+                                />
+                            </label>
+                            <label>
+                                5 km :
+                                <input
+                                    type="text"
+                                    name="time_5k"
+                                    value={updatedUserInfo.time_5k}
+                                    onChange={handleInputChange}
+                                    placeholder="HH:MM:SS"
+                                    className={formErrors.time_5k ? "input-error" : ""}
+                                />
+                                {formErrors.time_5k && <span className="error-message">{formErrors.time_5k}</span>}
+                            </label>
+                            <label>
+                                10 km :
+                                <input
+                                    type="text"
+                                    name="time_10k"
+                                    value={updatedUserInfo.time_10k}
+                                    onChange={handleInputChange}
+                                    placeholder="HH:MM:SS"
+                                    className={formErrors.time_10k ? "input-error" : ""}
+                                />
+                                {formErrors.time_10k && <span className="error-message">{formErrors.time_10k}</span>}
+                            </label>
+                            <label>
+                                Semi :
+                                <input
+                                    type="text"
+                                    name="time_semi"
+                                    value={updatedUserInfo.time_semi}
+                                    onChange={handleInputChange}
+                                    placeholder="HH:MM:SS"
+                                    className={formErrors.time_semi ? "input-error" : ""}
+                                />
+                                {formErrors.time_semi && <span className="error-message">{formErrors.time_semi}</span>}
+                            </label>
+                            <label>
+                                Marathon :
+                                <input
+                                    type="text"
+                                    name="time_marathon"
+                                    value={updatedUserInfo.time_marathon}
+                                    onChange={handleInputChange}
+                                    placeholder="HH:MM:SS"
+                                    className={formErrors.time_marathon ? "input-error" : ""}
+                                />
+                                {formErrors.time_marathon &&
+                                    <span className="error-message">{formErrors.time_marathon}</span>}
+                            </label>
+
+                            <div className="modal-actions">
+                                <button onClick={handleProfileUpdate} className="save-btn">
+                                    Enregistrer
+                                </button>
+                                <button onClick={handleEditModalClose} className="cancel-btn">
+                                    Annuler
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
