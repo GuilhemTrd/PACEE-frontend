@@ -220,9 +220,17 @@ const Profile = () => {
         try {
             const response = await apiClient.put(`/api/users/${localStorage.getItem('userId')}`, updatedData);
             if (response.status === 200) {
-                setUserInfo((prev) => ({ ...prev, ...updatedUserInfo }));
+                setUserInfo((prev) => ({
+                    ...prev,
+                    ...updatedUserInfo,
+                    time_5k: updatedData.time_5k,
+                    time_10k: updatedData.time_10k,
+                    time_semi: updatedData.time_semi,
+                    time_marathon: updatedData.time_marathon,
+                }));
                 toast.success("Profil mis à jour avec succès !");
                 setIsEditModalOpen(false);
+                await fetchUserInfo(); // Rafraîchir les données après la mise à jour
             } else {
                 throw new Error("Mise à jour non réussie.");
             }
