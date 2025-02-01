@@ -27,7 +27,13 @@ const Profile = () => {
         time_marathon: ''
     });
     const [formErrors, setFormErrors] = useState({});
+    const fileInputRef = useRef(null);
 
+    const handleEditAvatar = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
     const isValidTimeFormat = (time) => {
         const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])$/;
         return timeRegex.test(time);
@@ -92,54 +98,7 @@ const Profile = () => {
         };
     }, []);
 
-    const handleEditAvatar = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
 
-        input.onchange = async (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            const maxFileSize = 2 * 1024 * 1024; // 2MB
-
-            if (!allowedTypes.includes(file.type)) {
-                toast.warning("Seuls les fichiers JPEG, PNG et GIF sont acceptés.");
-                return;
-            }
-            if (file.size > maxFileSize) {
-                toast.warning("La taille du fichier ne doit pas dépasser 2MB.");
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('image_profile', file);
-
-            try {
-                const uploadResponse = await apiClient.post(
-                    `/api/users/${localStorage.getItem('userId')}/upload-avatar`,
-                    formData
-                );
-                const updatedImageProfile = uploadResponse.data.image_profile;
-                const timestampedUrl = `${process.env.REACT_APP_API_URL}${updatedImageProfile}?timestamp=${new Date().getTime()}`;
-
-                setPathProfilePicture(timestampedUrl);
-                setUserInfo((prev) => ({
-                    ...prev,
-                    image_profile: updatedImageProfile,
-                }));
-
-                toast.success("Votre photo de profil a été mise à jour avec succès !");
-                localStorage.setItem('profileUpdated', true);
-
-            } catch {
-                toast.error("Une erreur s'est produite lors de la mise à jour de votre photo de profil.");
-            }
-        };
-
-        input.click();
-    };
     const logout = () => {
         window.location.href = '/login';
     };
@@ -220,23 +179,57 @@ const Profile = () => {
         try {
             const response = await apiClient.put(`/api/users/${localStorage.getItem('userId')}`, updatedData);
             if (response.status === 200) {
-                setUserInfo((prev) => ({
-                    ...prev,
-                    ...updatedUserInfo,
-                    time_5k: updatedData.time_5k,
-                    time_10k: updatedData.time_10k,
-                    time_semi: updatedData.time_semi,
-                    time_marathon: updatedData.time_marathon,
-                }));
+                setUserInfo((prev) => ({ ...prev, ...updatedData }));
                 toast.success("Profil mis à jour avec succès !");
                 setIsEditModalOpen(false);
-                await fetchUserInfo(); // Rafraîchir les données après la mise à jour
             } else {
                 throw new Error("Mise à jour non réussie.");
             }
         } catch (err) {
             console.error("Erreur lors de la mise à jour du profil :", err);
             toast.error("Une erreur s'est produite lors de la mise à jour du profil.");
+        }
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.warning("Seuls les fichiers JPEG, PNG et GIF sont acceptés.");
+            return;
+        }
+        if (file.size > maxFileSize) {
+            toast.warning("La taille du fichier ne doit pas dépasser 2MB.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image_profile', file);
+
+        try {
+            const uploadResponse = await apiClient.post(
+                `/api/users/${localStorage.getItem('userId')}/upload-avatar`,
+                formData
+            );
+            const updatedImageProfile = uploadResponse.data.image_profile;
+            const timestampedUrl = `${process.env.REACT_APP_API_URL}${updatedImageProfile}?timestamp=${new Date().getTime()}`;
+
+            setPathProfilePicture(timestampedUrl);
+            setUserInfo((prev) => ({
+                ...prev,
+                image_profile: updatedImageProfile,
+            }));
+
+            toast.success("Votre photo de profil a été mise à jour avec succès !");
+            localStorage.setItem('profileUpdated', true);
+
+        } catch (error) {
+            console.error("Erreur lors de l'upload :", error);
+            toast.error("Une erreur s'est produite lors de la mise à jour de votre photo de profil.");
         }
     };
 
@@ -264,6 +257,14 @@ const Profile = () => {
                         <button className="edit-avatar-btn" onClick={handleEditAvatar}>
                             ✏️
                         </button>
+                        {/* Ajoutez l'élément <input> caché */}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            style={{display: 'none'}}
+                            onChange={handleFileChange}
+                        />
                     </div>
                     <div className="profile-info-user">
                         <h2>{userInfo.username || 'Utilisateur inconnu'}</h2>
