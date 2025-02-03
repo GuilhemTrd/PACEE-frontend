@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './NotFound.css';
+import '../router.css';
 import logo from '../../../../assets/logo/logo-typographique.png';
 
 const NotFound = () => (
