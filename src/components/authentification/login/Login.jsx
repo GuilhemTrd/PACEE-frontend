@@ -65,9 +65,6 @@ const Login = () => {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('userId', data.user.id);
-                localStorage.setItem('roles', JSON.stringify(data.user.roles));
-                console.log('Connexion réussie:', data);
-                console.log('localStorage:', localStorage);
                 setSuccessMessage('Connexion réussie !');
                 navigate('/discussions');
             } else {
