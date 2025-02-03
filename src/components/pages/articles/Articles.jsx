@@ -4,6 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './Articles.css';
+import useAuth from '../../../hooks/useAuth';
 
 const Articles = () => {
     const [articles, setArticles] = useState([]);
@@ -15,8 +16,8 @@ const Articles = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
-
     const cacheRef = useRef({});
+    const { isAdmin } = useAuth();
 
     useEffect(() => {
         if (toastMessage) {
@@ -172,9 +173,11 @@ const Articles = () => {
                 </div>
 
                 {/* Bouton flotant pour ajouter un article */}
-                <Link to="/create-article" className="floating-button">
-                    +
-                </Link>
+                {isAdmin && (
+                    <Link to="/create-article" className="floating-button">
+                        +
+                    </Link>
+                )}
 
                 {/* Bouton Charger plus */}
                 {!isSearching && articles.length > 0 && !isLastPage && (

@@ -8,10 +8,12 @@ import Loader from '../../common/loader/Loader';
 import apiClient from '../../../utils/apiClient';
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer, toast} from 'react-toastify';
+import useAuth from '../../../hooks/useAuth';
 
 const Discussions = () => {
     // ** Références **
     const newDiscussionRef = useRef(null);
+    const {isAdmin} = useAuth();
 
     // ** États liés à l'utilisateur **
     const userId = localStorage.getItem('userId');
@@ -366,7 +368,7 @@ const Discussions = () => {
     if (isLoading) { return <Loader />; }
     return (
         <div className="actualite-container">
-            <Navbar />
+            <Navbar/>
             <ToastContainer/>
             <div className="discussion-content-container">
                 <h1>Fil d’actualité</h1>
@@ -391,11 +393,12 @@ const Discussions = () => {
                     </button>
                 </div>
                 {/* Bouton pour ajouter une nouvelle discussions */}
-                <div className="add-discussion-section">
-                    {!isPopupOpen ? (
-                        <div className="add-discussion-button" onClick={openNewDiscussion}>+</div>
-                    ) : (
-                        <div className="new-discussion-card">
+                {isAdmin && (
+                    <div className="add-discussion-section">
+                        {!isPopupOpen ? (
+                            <div className="add-discussion-button" onClick={openNewDiscussion}>+</div>
+                        ) : (
+                            <div className="new-discussion-card">
                         <textarea
                             ref={newDiscussionRef}
                             placeholder="Quoi de neuf?"
@@ -403,126 +406,129 @@ const Discussions = () => {
                             onChange={(e) => setNewdiscussionMessage(e.target.value)}
                             className="new-discussion-textarea"
                         />
-                            <div className="new-discussion-actions">
-                                <button onClick={handleAddDiscussion} className="submit-button">Publier</button>
-                                <button onClick={() => setIsPopupOpen(false)} className="cancel-button">Annuler</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className="discussions-container">
-                    {discussions.length > 0 && (
-                        discussions.map((discussion, index) => (
-                            <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`}
-                                 key={`discussion-${index}-${discussion.id}`}
-                                 style={{backgroundColor: index % 2 === 0 ? 'rgba(255, 123, 0, 0.1)' : '#fff'}}>
-                                <div className="discussion-header">
-                                    <img src={discussion.user?.image_profile || userProfile} alt="User Profile"
-                                         className="discussion-profile-pic"/>
-                                    <div className="discussion-info">
-                                        <h2>{discussion.user?.username}</h2>
-                                        <span>{formatElapsedTime(discussion.created_at)}</span>
-                                    </div>
+                                <div className="new-discussion-actions">
+                                    <button onClick={handleAddDiscussion} className="submit-button">Publier</button>
+                                    <button onClick={() => setIsPopupOpen(false)} className="cancel-button">Annuler
+                                    </button>
                                 </div>
-                                <p className="discussion-message">
-                                    {expandeddiscussions[discussion.id] || discussion.content.length <= 100
-                                        ? discussion.content
-                                        : `${discussion.content.substring(0, 150)}...`}
-                                    {discussion.content.length > 100 && (
-                                        <span className="toggle-message"
-                                              onClick={() => toggleExpanddiscussion(discussion.id)}>
+                            </div>
+                        )}
+                    </div>
+                )}
+                    <div className="discussions-container">
+                {discussions.length > 0 && (
+                    discussions.map((discussion, index) => (
+                    <div className={`discussion ${discussion.userLiked ? 'liked' : ''}`}
+                 key={`discussion-${index}-${discussion.id}`}
+                 style={{backgroundColor: index % 2 === 0 ? 'rgba(255, 123, 0, 0.1)' : '#fff'}}>
+                <div className="discussion-header">
+                    <img src={discussion.user?.image_profile || userProfile} alt="User Profile"
+                         className="discussion-profile-pic"/>
+                    <div className="discussion-info">
+                        <h2>{discussion.user?.username}</h2>
+                        <span>{formatElapsedTime(discussion.created_at)}</span>
+                    </div>
+                </div>
+                <p className="discussion-message">
+                    {expandeddiscussions[discussion.id] || discussion.content.length <= 100
+                        ? discussion.content
+                        : `${discussion.content.substring(0, 150)}...`}
+                    {discussion.content.length > 100 && (
+                        <span className="toggle-message"
+                              onClick={() => toggleExpanddiscussion(discussion.id)}>
                                             {expandeddiscussions[discussion.id] ? ' Voir moins' : ' Voir plus'}
                                         </span>
-                                    )}
-                                </p>
-                                <div className="discussion-footer">
-                                    <div className="like-container"
-                                         onClick={() => toggleLike(discussion.id, discussion.userLiked)}>
-                                        <span className="like-count">{discussion.likeCount}‎ ‎ </span>
-                                        <img
-                                            src={discussion.userLiked ? likeIconColor : likeIcon}
-                                            alt={discussion.userLiked ? 'Liked' : 'Like'}
-                                            className={`discussion-like ${discussion.userLiked ? 'liked' : ''}`}
-                                        />
-                                        {flyLikeId === discussion.id && <span className="fly-like">+1</span>}
-                                    </div>
-                                    <span className="discussion-comments"
-                                          onClick={() => toggleShowComments(discussion.id, discussion.discussionComments)}>
+                    )}
+                </p>
+                <div className="discussion-footer">
+                    <div className="like-container"
+                         onClick={() => toggleLike(discussion.id, discussion.userLiked)}>
+                        <span className="like-count">{discussion.likeCount}‎ ‎ </span>
+                        <img
+                            src={discussion.userLiked ? likeIconColor : likeIcon}
+                            alt={discussion.userLiked ? 'Liked' : 'Like'}
+                            className={`discussion-like ${discussion.userLiked ? 'liked' : ''}`}
+                        />
+                        {flyLikeId === discussion.id && <span className="fly-like">+1</span>}
+                    </div>
+                    <span className="discussion-comments"
+                          onClick={() => toggleShowComments(discussion.id, discussion.discussionComments)}>
                                         {discussion.commentCount || 0} {discussion.commentCount === 1 ? "commentaire" : "commentaires"}
                                     </span>
+                </div>
+                {showComments[discussion.id] && (
+                    <div className="comments-section">
+                        <button onClick={() => handleReplyClick(discussion.id)} className="reply-button">
+                            {replyInputVisible[discussion.id] ? 'Annuler' : 'Répondre'}
+                        </button>
+                        {replyInputVisible[discussion.id] && (
+                            <div className="add-comment-section">
+                                <input
+                                    type="text"
+                                    id={`comment-input-${discussion.id}`}
+                                    value={newCommentContent[discussion.id] || ''}
+                                    onChange={(e) => handleCommentInputChange(discussion.id, e.target.value)}
+                                    placeholder="Ajouter un commentaire..."
+                                    className="comment-input"
+                                    maxLength="200"
+                                />
+                                <div id={`character-counter-${discussion.id}`}
+                                     className="character-counter">
+                                    {newCommentContent[discussion.id]?.length || 0} / 200
                                 </div>
-                                {showComments[discussion.id] && (
-                                    <div className="comments-section">
-                                        <button onClick={() => handleReplyClick(discussion.id)} className="reply-button">
-                                            {replyInputVisible[discussion.id] ? 'Annuler' : 'Répondre'}
-                                        </button>
-                                        {replyInputVisible[discussion.id] && (
-                                            <div className="add-comment-section">
-                                                <input
-                                                    type="text"
-                                                    id={`comment-input-${discussion.id}`}
-                                                    value={newCommentContent[discussion.id] || ''}
-                                                    onChange={(e) => handleCommentInputChange(discussion.id, e.target.value)}
-                                                    placeholder="Ajouter un commentaire..."
-                                                    className="comment-input"
-                                                    maxLength="200"
-                                                />
-                                                <div id={`character-counter-${discussion.id}`}
-                                                     className="character-counter">
-                                                    {newCommentContent[discussion.id]?.length || 0} / 200
-                                                </div>
-                                                <button onClick={() => handleAddComment(discussion.id)}
-                                                        className="comment-button">
-                                                    Commenter
-                                                </button>
-                                            </div>
-                                        )}
-                                        {isLoadingComments[discussion.id] ? (
-                                            <Loader isCommentLoader={true}/>
-                                        ) : (
-                                            comments[discussion.id]?.slice(0, visibleComments[discussion.id]).map(comment => (
-                                                <div className="comment" key={comment.id}>
-                                                    <div className="comment-header">
+                                <button onClick={() => handleAddComment(discussion.id)}
+                                        className="comment-button">
+                                    Commenter
+                                </button>
+                            </div>
+                        )}
+                        {isLoadingComments[discussion.id] ? (
+                            <Loader isCommentLoader={true}/>
+                        ) : (
+                            comments[discussion.id]?.slice(0, visibleComments[discussion.id]).map(comment => (
+                                <div className="comment" key={comment.id}>
+                                    <div className="comment-header">
                                                         <span
                                                             className="comment-author">{comment.user?.username}</span>
-                                                        <span
-                                                            className="comment-time">{formatElapsedTime(comment.created_at)}</span>
-                                                    </div>
-                                                    <span className="comment-message">{comment.content}</span>
-                                                </div>
-                                            ))
-                                        )}
-                                        {visibleComments[discussion.id] < (comments[discussion.id]?.length || 0) && (
-                                            <div className="load-more" onClick={() => loadMoreComments(discussion.id)}>
-                                                Charger plus
-                                            </div>
-                                        )}
-
+                                        <span
+                                            className="comment-time">{formatElapsedTime(comment.created_at)}</span>
                                     </div>
-                                )}
+                                    <span className="comment-message">{comment.content}</span>
+                                </div>
+                            ))
+                        )}
+                        {visibleComments[discussion.id] < (comments[discussion.id]?.length || 0) && (
+                            <div className="load-more" onClick={() => loadMoreComments(discussion.id)}>
+                                Charger plus
                             </div>
-                        ))
-                    )}
-                </div>
-                <div className="load-more-container">
-                    {
-                        isLoading || isLoadingMore ? (
-                            <Loader/>
-                        ) : discussions.length === 0 ? (
-                            <p>Aucune discussion disponible pour le moment.</p>
-                        ) : isLastPage ? (
-                            <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
-                        ) : (
-                            <button onClick={loadMoreDiscussions} className="load-more-button">
-                                Voir plus
-                            </button>
-                        )
-                    }
-                </div>
+                        )}
 
+                    </div>
+                )}
             </div>
+            ))
+            )}
         </div>
-    );
+    <div className="load-more-container">
+        {
+            isLoading || isLoadingMore ? (
+                <Loader/>
+            ) : discussions.length === 0 ? (
+                <p>Aucune discussion disponible pour le moment.</p>
+            ) : isLastPage ? (
+                <p className="no-more-discussions-message">Toutes les discussions ont été chargées.</p>
+            ) : (
+                <button onClick={loadMoreDiscussions} className="load-more-button">
+                    Voir plus
+                </button>
+            )
+        }
+    </div>
+
+</div>
+</div>
+)
+    ;
 };
 
 export default Discussions;

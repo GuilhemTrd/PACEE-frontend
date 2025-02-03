@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './ArticleDetail.css';
+import useAuth from '../../../hooks/useAuth';
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -10,6 +11,7 @@ const ArticleDetail = () => {
     const [article, setArticle] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { isAdmin } = useAuth();
 
     const fetchArticle = useCallback(async () => {
         try {
@@ -66,12 +68,14 @@ const ArticleDetail = () => {
                 <button className="go-back-button" onClick={handleGoBack}>
                     ← Tous les articles
                 </button>
-                <button
-                    onClick={() => navigate(`/articles/edit/${article.id}`)}
-                    className="edit-article-button"
-                >
-                    Modifier l'article
-                </button>
+                {isAdmin && (
+                    <button
+                        onClick={() => navigate(`/articles/edit/${article.id}`)}
+                        className="edit-article-button"
+                    >
+                        Modifier l'article
+                    </button>
+                )}
                 <h1>{article.title}</h1>
                 <p className="article-detail-date">Publié le : {new Date(article.created_at).toLocaleDateString()}</p>
                 <div
