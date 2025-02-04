@@ -18,6 +18,25 @@ body {
     align-items: center;
     height: 100vh;
 }
+.login-container .back-to-landing {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: transparent;
+    color: #ff7f00;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid #ff7f00;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    z-index: 1000;
+}
+
+.login-container .back-to-landing:hover {
+    background-color: #ff7f00;
+    color: white;
+}
 
 .login-container .background-image {
     width: 100%;

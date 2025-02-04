@@ -8,6 +8,7 @@ import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
 import checkIcon from '../../../assets/icons/check.svg';
 import crossIcon from '../../../assets/icons/cross.svg';
+import {Link} from "react-router-dom";
 
 const Register = () => {
     const [firstname, setFirstname] = useState('');
@@ -137,6 +138,7 @@ const Register = () => {
 
     return (
         <div className="register-container">
+            <Link to="/" className="back-to-landing">⬅ Retour sur le site</Link>
             <div className="image-container">
                 <img src={background} alt="Background" className="background-image" />
             </div>

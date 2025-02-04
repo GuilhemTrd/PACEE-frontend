@@ -3,10 +3,13 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import NotFound from "./components/common/router/notFound/NotFound";
 import NotAuth from "./components/common/router/notAuth/NotAuth";
 import PrivateRoute from "./components/common/router/privateRoute";
+import LandingPage from "./components/pages/landingPage/LandingPage";
 import './App.css';
+
 /* Auth */
 import Login from './components/authentification/login/Login';
 import Register from "./components/authentification/register/Register";
+
 /* Pages */
 import Discussions from "./components/pages/discussions/Discussions";
 import Profile from "./components/pages/profile/Profile";
@@ -15,19 +18,18 @@ import ArticleDetail from "./components/pages/articleDetail/ArticleDetail";
 import CreateArticle from "./components/pages/createArticle/CreateArticle";
 import EditArticle from "./components/pages/editArticle/EditArticle";
 import Settings from "./components/pages/settings/Settings";
+
 /* Layout */
 import Navbar from "./components/common/navbar/Navbar";
 
 const App = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token')); // Utilisation de l'état
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
-    // Met à jour `isAuthenticated` lorsque les jetons sont modifiés
     useEffect(() => {
         const handleStorageChange = () => {
             setIsAuthenticated(!!localStorage.getItem('token'));
         };
 
-        // Écoute les changements dans `localStorage`
         window.addEventListener('storage', handleStorageChange);
 
         return () => {
@@ -39,7 +41,7 @@ const App = () => {
         <Router>
             <Routes>
                 {/* Redirection par défaut */}
-                <Route path="/" element={<Navigate to={isAuthenticated ? "/profile" : "/login"} />} />
+                <Route path="/" element={<LandingPage />} />
 
                 {/* Routes publiques */}
                 <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -104,10 +106,8 @@ const App = () => {
                 />
                 <Route path="/navbar" element={<Navbar />} />
 
-                {/* Route 404 */}
+                {/* Routes d'erreurs */}
                 <Route path="*" element={<NotFound />} />
-
-                {/* Route non autorisée */}
                 <Route path="/not-auth" element={<NotAuth />} />
             </Routes>
         </Router>

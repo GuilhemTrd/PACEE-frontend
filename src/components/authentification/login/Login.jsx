@@ -6,7 +6,7 @@ import mailIcon from '../../../assets/icons/mail.svg';
 import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
 import apiClient from '../../../utils/apiClient';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -81,6 +81,7 @@ const Login = () => {
 
     return (
         <div className="login-container">
+            <Link to="/" className="back-to-landing">⬅ Retour sur le site</Link>
             <div className="image-container">
                 <img src={background} alt="Background" className="background-image" />
             </div>
