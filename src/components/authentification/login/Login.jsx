@@ -7,13 +7,13 @@ import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
 import apiClient from '../../../utils/apiClient';
 import {Link, useNavigate} from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -41,16 +41,17 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setErrorMessage('');
-        setSuccessMessage('');
+
         if (!/\S+@\S+\.\S+/.test(email)) {
-            setErrorMessage('Veuillez entrer un email valide.');
+            toast.warn('Veuillez entrer un email valide.');
+            setIsLoading(false);
             return;
         }
 
         if (password.length < 8) {
-            setErrorMessage('Le mot de passe doit comporter au moins 8 caractères.');
+            toast.error('Le mot de passe doit comporter au moins 8 caractères.');
             passwordInputRef.current.focus();
+            setIsLoading(false);
             return;
         }
 
@@ -65,15 +66,13 @@ const Login = () => {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('userId', data.user.id);
-                setSuccessMessage('Connexion réussie !');
-                navigate('/discussions');
-            } else {
-                setErrorMessage('Identifiant ou mot de passe incorrect.');
-                passwordInputRef.current.focus();
+
+                toast.success('Connexion réussie !');
+                navigate('/discussions')
             }
         } catch (error) {
-            console.error('Erreur lors de la connexion:', error);
-            setErrorMessage('Une erreur est survenue, veuillez réessayer.');
+            toast.error('Identifiant ou mot de passe incorrect.');
+            passwordInputRef.current.focus();
         } finally {
             setIsLoading(false);
         }
@@ -81,17 +80,29 @@ const Login = () => {
 
     return (
         <div className="login-container">
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                limit={3}
+            />
             <Link to="/" className="back-to-landing">⬅ Retour sur le site</Link>
             <div className="image-container">
                 <img src={background} alt="Background" className="background-image" />
             </div>
             <div className="form-container">
-                <img src={logo} alt="Logo" className="logo"/>
+                <img src={logo} alt="Logo" className="logo" />
                 <h1>Se connecter</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <div className="input-icon">
-                            <img src={mailIcon} alt="Mail Icon"/>
+                            <img src={mailIcon} alt="Mail Icon" />
                             <input
                                 type="email"
                                 name="email"
@@ -133,14 +144,12 @@ const Login = () => {
                     <a href="/forgot-password" className="forgot-password-link">
                         Modifier
                     </a>
-                    <br/>
+                    <br />
                     <span>Vous n'avez pas de compte ?&nbsp;</span>
-                    <a href="/register" className="register-link">
+                    <Link to="/register" className="register-link">
                         S'inscrire
-                    </a>
+                    </Link>
                 </div>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                {successMessage && <p className="success-message">{successMessage}</p>}
             </div>
         </div>
     );

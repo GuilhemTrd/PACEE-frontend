@@ -44,7 +44,7 @@ const App = () => {
                 <Route path="/" element={<LandingPage />} />
 
                 {/* Routes publiques */}
-                <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
                 {/* Routes privées */}

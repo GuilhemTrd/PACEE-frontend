@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiClient = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
-    timeout: 10000, // Délai maximum pour une requête
+    timeout: 10000,
 });
 
 apiClient.interceptors.request.use(
@@ -27,10 +27,8 @@ apiClient.interceptors.response.use(
             try {
                 const refreshToken = localStorage.getItem('refresh_token');
                 if (!refreshToken) {
-                    console.error('Aucun refresh token trouvé. Déconnexion en cours.');
                     localStorage.clear();
-                    window.location.href = '/login';
-                    return Promise.reject(error);
+                    return Promise.reject(error); // Pas de redirection automatique
                 }
 
                 const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/token/refresh`, {
@@ -41,24 +39,9 @@ apiClient.interceptors.response.use(
                 originalRequest.headers['Authorization'] = `Bearer ${data.token}`;
                 return apiClient(originalRequest);
             } catch (refreshError) {
-                console.error('Le refresh token est expiré ou invalide. Déconnexion.');
                 localStorage.clear();
-                window.location.href = '/login';
-                return Promise.reject(refreshError);
+                return Promise.reject(refreshError); // On laisse la gestion au composant
             }
-        }
-
-        if ([401, 403].includes(error.response?.status)) {
-            console.error('Erreur d\'authentification ou accès refusé. Déconnexion.');
-            localStorage.clear();
-            window.location.href = '/login';
-            return Promise.reject(error);
-        }
-
-        if (!error.response) {
-            console.error('Le serveur est injoignable ou ne répond pas.');
-            window.location.href = '/login';
-            return Promise.reject(error);
         }
 
         return Promise.reject(error);
