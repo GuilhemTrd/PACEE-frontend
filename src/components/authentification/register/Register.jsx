@@ -8,7 +8,10 @@ import eyeOpenIcon from '../../../assets/icons/eye-open.svg';
 import eyeClosedIcon from '../../../assets/icons/eye-closed.svg';
 import checkIcon from '../../../assets/icons/check.svg';
 import crossIcon from '../../../assets/icons/cross.svg';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const Register = () => {
     const [firstname, setFirstname] = useState('');
@@ -16,8 +19,6 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
     const [validations, setValidations] = useState({
         length: false,
         number: false,
@@ -29,10 +30,10 @@ const Register = () => {
         confirmPassword: false,
     });
     const [isLoading, setIsLoading] = useState(false);
-    const [shakePassword, setShakePassword] = useState(false); // Animation pour le mot de passe
-    const [shakeConfirm, setShakeConfirm] = useState(false); // Animation pour la confirmation
-    const [passwordVisible, setPasswordVisible] = useState(false); // État pour la visibilité du mot de passe
-    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // État pour la visibilité de la confirmation
+    const [shakePassword, setShakePassword] = useState(false);
+    const [shakeConfirm, setShakeConfirm] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
     // Validation du mot de passe
     const validatePassword = (password, confirmPassword) => {
@@ -79,8 +80,6 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage('');
-        setSuccessMessage('');
 
         // Si le mot de passe ne correspond pas aux validations, ajouter l'animation de secousse
         if (!validations.length || !validations.number || !validations.uppercase) {
@@ -112,7 +111,7 @@ const Register = () => {
             });
 
             if (response.status === 409) {
-                setErrorMessage('Cet email est déjà utilisé. Veuillez utiliser une autre adresse email.');
+                toast.warn('Cet email est déjà utilisé. Veuillez utiliser une autre adresse email.');
                 setShowValidations({ password: false, confirmPassword: false });
                 return;
             }
@@ -122,13 +121,12 @@ const Register = () => {
             }
 
             // Inscription réussie
-            setSuccessMessage('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-            setErrorMessage('');
+            toast.success('Inscription réussie ! Vous pouvez maintenant vous connecter.');
 
             // Cacher les validateurs après la soumission
             setShowValidations({ password: false, confirmPassword: false });
         } catch (error) {
-            setErrorMessage('Une erreur est survenue, veuillez réessayer.');
+            toast.error('Une erreur est survenue, veuillez réessayer.');
             setShowValidations({ password: false, confirmPassword: false });
         } finally {
             setIsLoading(false);
@@ -138,6 +136,17 @@ const Register = () => {
 
     return (
         <div className="register-container">
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <Link to="/" className="back-to-landing">⬅ Retour sur le site</Link>
             <div className="image-container">
                 <img src={background} alt="Background" className="background-image" />
@@ -262,8 +271,6 @@ const Register = () => {
                         Se connecter
                     </a>
                 </div>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                {successMessage && <p className="success-message">{successMessage}</p>}
             </div>
         </div>
     );
