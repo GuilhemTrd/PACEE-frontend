@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NotFound from "./components/common/router/notFound/NotFound";
 import NotAuth from "./components/common/router/notAuth/NotAuth";
 import PrivateRoute from "./components/common/router/privateRoute";
