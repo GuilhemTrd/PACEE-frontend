@@ -4,6 +4,10 @@ import Navbar from '../../common/navbar/Navbar';
 import apiClient from '../../../utils/apiClient';
 import './ArticleDetail.css';
 import useAuth from '../../../hooks/useAuth';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -30,10 +34,38 @@ const ArticleDetail = () => {
     }, [fetchArticle]);
 
     const handleGoBack = () => {
-        navigate('/articles'); // Redirection vers la liste des articles
+        navigate('/articles');
     };
 
-    if (isLoading) {
+    const handleDeleteArticle = async () => {
+        confirmAlert({
+            title: 'Confirmer la suppression',
+            message: 'Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.',
+            overlayClassName: "custom-overlay",
+            buttons: [
+                {
+                    label: 'Oui, supprimer',
+                    className: 'confirm-button',
+                    onClick: async () => {
+                        try {
+                            await apiClient.delete(`/api/articles/${id}`);
+                            toast.success("Article supprimé avec succès !");
+                            setTimeout(() => navigate('/articles'), 2000);
+                        } catch (error) {
+                            console.error("Erreur lors de la suppression de l'article:", error);
+                            toast.error("Échec de la suppression de l'article. Veuillez réessayer.");
+                        }
+                    }
+                },
+                {
+                    label: 'Annuler',
+                    className: 'cancel-button',
+                }
+            ]
+        });
+    };
+
+        if (isLoading) {
         return (
             <div className="article-detail-container">
                 <Navbar />
@@ -63,19 +95,30 @@ const ArticleDetail = () => {
 
     return (
         <div className="article-detail-container">
+            <ToastContainer position="top-right" autoClose={3000} />
             <Navbar />
             <div className="article-detail-content">
                 <button className="go-back-button" onClick={handleGoBack}>
                     ← Tous les articles
                 </button>
+
                 {isAdmin && (
-                    <button
-                        onClick={() => navigate(`/articles/edit/${article.id}`)}
-                        className="edit-article-button"
-                    >
-                        Modifier l'article
-                    </button>
+                    <div className="admin-actions">
+                        <button
+                            onClick={() => navigate(`/articles/edit/${article.id}`)}
+                            className="edit-article-button"
+                        >
+                            ✏️ Modifier l'article
+                        </button>
+                        <button
+                            onClick={handleDeleteArticle}
+                            className="delete-article-button"
+                        >
+                            🗑️ Supprimer l'article
+                        </button>
+                    </div>
                 )}
+
                 <h1>{article.title}</h1>
                 <p className="article-detail-date">Publié le : {new Date(article.created_at).toLocaleDateString()}</p>
                 <div

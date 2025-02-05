@@ -64,6 +64,8 @@
 .article-detail-body p {
     margin: 10px 0;
 }
+
+/* Bouton de retour */
 .go-back-button {
     background-color: transparent;
     color: #ff7b00;
@@ -74,7 +76,7 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .go-back-button:hover {
@@ -85,19 +87,96 @@
     transform: scale(0.95);
 }
 
-.edit-article-button {
+/* Conteneur des boutons admin */
+.admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/* Styles des boutons Modifier et Supprimer */
+.edit-article-button,
+.delete-article-button {
     background-color: #ff7b00;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: 8px 16px;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-left: 2%;
 }
 
-.edit-article-button:hover {
+.edit-article-button:hover,
+.delete-article-button:hover {
     background-color: #e06b00;
+}
+
+.delete-article-button {
+    background-color: #ff7b00;
+}.react-confirm-alert-overlay {
+     background: rgba(0, 0, 0, 0.6);
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     z-index: 1000; /* S'assurer qu'il passe au-dessus des autres éléments */
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+.react-confirm-alert {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: none;
+    z-index: 1001;
+    position: relative;
+}
+
+.react-confirm-alert h1,
+.react-confirm-alert h3 {
+    margin: 0;
+    color: #333;
+}
+
+.react-confirm-alert-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.react-confirm-alert-button-group button {
+    background-color: #ff7b00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.react-confirm-alert .confirm-button {
+    background-color: #ff7b00;
+}
+
+.react-confirm-alert-button-group button:hover {
+    background-color: #e06b00;
+}
+
+.react-confirm-alert-button-group .cancel-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.react-confirm-alert-button-group .cancel-button:hover {
+    background-color: #bbb;
 }
