@@ -319,8 +319,8 @@ const Profile = () => {
                     <button className="profile-btn edit-btn" onClick={handleEditModalOpen}>
                         Modifier le profil
                     </button>
-                    <Link to="/MyPaces" className="profile-btn paceCalculate-btn">
-                        Calculer mes allures
+                    <Link to="/Users" className="profile-btn user-btn">
+                        Chercher un utilisateur
                     </Link>
                     <Link to="/Login" onClick={logout} className="profile-btn logout-btn">
                         Déconnexion

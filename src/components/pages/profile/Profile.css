@@ -123,13 +123,13 @@ body {
 }
 
 .profile-btn.edit-btn,
-.profile-btn.paceCalculate-btn {
+.profile-btn.user-btn {
     background-color: #FF7B00;
     color: #fff;
 }
 
 .profile-btn.edit-btn:hover,
-.profile-btn.paceCalculate-btn:hover {
+.profile-btn.user-btn:hover {
     background-color: #e06b00;
 }
 

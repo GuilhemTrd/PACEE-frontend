@@ -13,6 +13,7 @@ import Register from "./components/authentification/register/Register";
 /* Pages */
 import Discussions from "./components/pages/discussions/Discussions";
 import Profile from "./components/pages/profile/Profile";
+import PublicProfile from "./components/pages/profile/publicProfile/PublicProfile";
 import Articles from "./components/pages/articles/Articles";
 import ArticleDetail from "./components/pages/articleDetail/ArticleDetail";
 import CreateArticle from "./components/pages/createArticle/CreateArticle";
@@ -21,6 +22,7 @@ import Settings from "./components/pages/settings/Settings";
 
 /* Layout */
 import Navbar from "./components/common/navbar/Navbar";
+import Users from "./components/pages/users/Users";
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -53,6 +55,22 @@ const App = () => {
                     element={
                         <PrivateRoute isAuthenticated={isAuthenticated}>
                             <Profile />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/publicProfile/:userId"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
+                            <PublicProfile />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/users"
+                    element={
+                        <PrivateRoute isAuthenticated={isAuthenticated} requiredRole="ROLE_ADMIN">
+                            <Users />
                         </PrivateRoute>
                     }
                 />

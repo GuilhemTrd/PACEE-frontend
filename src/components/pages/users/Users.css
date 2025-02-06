@@ -1,0 +1,166 @@
+/* ----- USERS PAGE LAYOUT ----- */
+.users-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    min-height: 100vh;
+    width: 80%;
+    margin-left: 17%;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ----- HEADER ----- */
+.users-content-wrapper {
+    width: 60%;
+    text-align: center;
+}
+
+.users-content-wrapper h1 {
+    color: #333;
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* ----- SEARCH BAR ----- */
+.search-bar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.search-input {
+    padding: 12px 15px;
+    border: 2px solid #FF7B00;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    transition: 0.3s ease-in-out;
+}
+
+.search-input:focus {
+    border-color: #e06b00;
+    box-shadow: 0 0 8px rgba(253, 114, 20, 0.5);
+}
+
+/* ----- USERS TABLE ----- */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* HEADER */
+.users-table th {
+    background-color: #FF7B00;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 15px;
+    text-align: left;
+}
+
+/* BODY */
+.users-table td {
+    padding: 12px;
+    margin: 0 auto;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* ROWS */
+.users-table tr:hover {
+    background-color: #fff3e6;
+    transition: background-color 0.3s ease;
+}
+
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.clickable-row:hover {
+    background-color: #fff3e6;
+}
+
+
+/* AVATAR COLUMN */
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FF7B00;
+}
+
+/* USERNAME COLUMN */
+.user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* NO USERS FOUND */
+.no-users {
+    text-align: center;
+    color: #999;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 20px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .users-content-wrapper {
+        width: 80%;
+    }
+
+    .search-input {
+        font-size: 14px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .user-name {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .users-page {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .users-content-wrapper {
+        width: 90%;
+    }
+
+    .users-table th, .users-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .users-table th, .users-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
